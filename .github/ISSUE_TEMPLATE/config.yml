@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Questions and ideas
+    url: https://github.com/juxt-lang/juxt/discussions
+    about: Ask and discuss in GitHub Discussions.
+  - name: Security report
+    url: https://github.com/juxt-lang/juxt/security/advisories/new
+    about: Report vulnerabilities privately.

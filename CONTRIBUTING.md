@@ -10,4 +10,6 @@ Thanks for helping.
    - `claude plugin eval plugins/juxt` for behaviour changes, and paste the summary table in the PR.
 4. Sign off every commit (`git commit -s`) to certify the Developer Certificate of Origin (https://developercertificate.org).
 
+Please follow the [Code of Conduct](CODE_OF_CONDUCT.md) and add a line to `CHANGELOG.md` for user-facing changes.
+
 Language changes go through a short RFC: an issue titled `RFC: <change>` with the motivation, the syntax, and an example program.

@@ -1,0 +1,26 @@
+name: Bug report
+description: Something in the plugin, skills or site does not work as documented.
+labels: [bug, triage]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you ran, what you expected, and what you got.
+    validations: { required: true }
+  - type: input
+    id: host
+    attributes:
+      label: Agent host and version
+      placeholder: "Claude Code 2.x / Codex / other"
+    validations: { required: true }
+  - type: input
+    id: version
+    attributes:
+      label: Juxt plugin version
+      placeholder: "0.1.0"
+  - type: textarea
+    id: logs
+    attributes:
+      label: Output or the compiled .juxt program
+      render: text

@@ -1,0 +1,22 @@
+name: Language RFC
+description: Propose a change to the Juxt language.
+title: "RFC: "
+labels: [rfc]
+body:
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation
+    validations: { required: true }
+  - type: textarea
+    id: syntax
+    attributes:
+      label: Syntax
+      render: text
+    validations: { required: true }
+  - type: textarea
+    id: example
+    attributes:
+      label: Example program
+      render: text
+    validations: { required: true }
