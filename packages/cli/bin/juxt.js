@@ -7,6 +7,7 @@ const { lint, toIR } = require('../lib/lint');
 const pkg = require('../package.json');
 
 const SKILL = path.join(__dirname, '..', 'skill');
+const RECIPES = path.join(__dirname, '..', 'recipes');
 const TTY = process.stdout.isTTY && !process.env.NO_COLOR;
 const c = (code, s) => (TTY ? `\x1b[${code}m${s}\x1b[0m` : s);
 const HOSTS = {
@@ -23,6 +24,7 @@ Usage
   npx juxt-lang init [--host agents|claude|cursor|gemini|all] [--force]
       Add Juxt mode to this repo: installs the Agent Skill and writes juxt/context.juxt.
       Default host: agents (.agents/skills/juxt, read by Codex and other Agent Skills tools).
+  npx juxt-lang fix <recipe>         Write a ready-made fix program, e.g. fix php2shell
   npx juxt-lang lint [files...]      Check .juxt programs (default: juxt/**/*.juxt)
   npx juxt-lang ir <file>            Print a program's intermediate representation as JSON
   npx juxt-lang digest [1d]          What changed in the repo, grouped by area (git only, no model)
@@ -78,6 +80,28 @@ function init(args) {
   return code;
 }
 
+
+function fixCmd(args) {
+  const list = fs.existsSync(RECIPES) ? fs.readdirSync(RECIPES).filter(f => f.endsWith('.juxt')).map(f => f.slice(0, -5)) : [];
+  const name = (args.find(a => !a.startsWith('--')) || '').toLowerCase();
+  if (!name || !list.includes(name)) {
+    if (name) console.error(`juxt: no fix recipe named "${name}"\n`);
+    console.log('Fix recipes (Juxt programs your AI agent runs safely):');
+    for (const r of list) console.log(`  npx juxt-lang fix ${r}`);
+    return name ? 2 : 0;
+  }
+  const root = gitRoot();
+  const dst = path.join(root, 'juxt', name + '.juxt');
+  fs.mkdirSync(path.dirname(dst), { recursive: true });
+  if (fs.existsSync(dst) && !args.includes('--force')) console.log(`${c('33', 'skip')}  juxt/${name}.juxt already exists (use --force to replace)`);
+  else { fs.copyFileSync(path.join(RECIPES, name + '.juxt'), dst); console.log(`${c('32', 'wrote')} juxt/${name}.juxt`); }
+  const skill = Object.values(HOSTS).some(h => fs.existsSync(path.join(root, h)));
+  console.log(`\nNext, tell your AI agent:\n  ${c('1', `use juxt: run juxt/${name}.juxt`)}`);
+  if (!skill) console.log(`\nNo Juxt skill in this repo yet. Run ${c('1', 'npx juxt-lang init')} first,\nor paste juxt/${name}.juxt into any AI agent that can run commands.`);
+  console.log('\nThe agent shows what it found and asks before it changes anything.');
+  return 0;
+}
+
 function walk(dir, out = []) {
   if (!fs.existsSync(dir)) return out;
   for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -120,6 +144,7 @@ function main(argv) {
       console.log(JSON.stringify({ ...toIR(prog), diagnostics: diags }, null, 2));
       return diags.some(d => d.level === 'error') ? 1 : 0;
     }
+    case 'fix': case 'recipe': return fixCmd(rest);
     case 'digest': return runScript('digest.sh', rest);
     case 'facts': return runScript('facts.sh', rest);
     case 'hosts': return runScript('hosts.sh', rest);

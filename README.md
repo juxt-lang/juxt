@@ -37,7 +37,19 @@ Understood as
   OPEN        cancel after shipping?  partial refunds?
 ```
 
+## Security update: fix PHP2Shell with Juxt
+
+PHP2Shell (CVE-2026-109618, CVE-2026-109619) lets attackers run code on PHP web servers without logging in, and it is being exploited now. Updating PHP is the only fix. This Juxt program has your AI agent find every PHP that serves your site, ask before changing anything, update, restart and prove the fix:
+
+```sh
+npx juxt-lang init               # once per repo
+npx juxt-lang fix php2shell      # writes juxt/php2shell.juxt
+```
+
+Then tell your agent: **`use juxt: run juxt/php2shell.juxt`**. No install? Paste [the program](examples/php2shell.juxt) into any AI agent that can run commands. Details and fixed versions: [juxt-lang.github.io/#/php2shell](https://juxt-lang.github.io/#/php2shell).
+
 ## Why Juxt
+
 
 | The problem with agents today | What Juxt does |
 |---|---|

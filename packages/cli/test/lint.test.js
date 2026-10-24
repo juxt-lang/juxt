@@ -27,3 +27,11 @@ test('IR has typed constraints', () => {
   assert.strictEqual(ir.kind, 'task');
   assert.deepStrictEqual(ir.blocks.constraints[1], { level: 'MUST NOT', rule: 'change the public order schema' });
 });
+
+test('fix recipes lint without errors', () => {
+  const rd = path.join(__dirname, '..', 'recipes');
+  for (const f of fs.readdirSync(rd).filter(f => f.endsWith('.juxt'))) {
+    const { diags } = lint(fs.readFileSync(path.join(rd, f), 'utf8'));
+    assert.deepStrictEqual(diags.filter(d => d.level === 'error'), [], f);
+  }
+});

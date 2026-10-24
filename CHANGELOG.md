@@ -2,6 +2,12 @@
 
 All notable changes to this project are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses [Semantic Versioning](https://semver.org/).
 
+## [0.2.0] - 2026-10-24
+
+### Added
+- `juxt fix <recipe>`: ready-made fix programs. First recipe: `npx juxt-lang fix php2shell` for CVE-2026-109618 and CVE-2026-109619. The agent finds every web-serving PHP, asks before changing anything, updates, restarts and verifies.
+- `examples/php2shell.juxt`.
+
 ## [0.1.2] - 2026-10-24
 
 ### Added
@@ -32,6 +38,7 @@ First public preview.
 - `juxt-lang` npm CLI (`npx juxt-lang init | lint | ir | digest | facts | hosts`).
 - Language summary (3.4), example programs, eval suite and website.
 
+[0.2.0]: https://github.com/juxt-lang/juxt/releases/tag/v0.2.0
 [0.1.2]: https://github.com/juxt-lang/juxt/releases/tag/v0.1.2
 [0.1.1]: https://github.com/juxt-lang/juxt/releases/tag/v0.1.1
 [0.1.0]: https://github.com/juxt-lang/juxt/releases/tag/v0.1.0

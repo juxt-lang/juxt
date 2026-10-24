@@ -1,0 +1,30 @@
+@juxt 3.4
+# PHP2Shell fix: CVE-2026-109618, CVE-2026-109619 (critical, exploited in the wild)
+# Run it: tell your AI agent "use juxt: run juxt/php2shell.juxt"
+# No Juxt installed? Paste this whole file into any AI agent that can run commands.
+# Sources: watchtowr.com/intelligence/php-cve-2026-109618-faq, cisa.gov alert 2026-10-21
+
+objective: find every PHP that serves web traffic here and update it past PHP2Shell
+
+context:
+  fixed:        8.5.12, 8.4.27, 8.3.36, 8.2.35
+  backport:     8.1, 8.0, 7.4 have no official release; use a distro or LTS vendor package, or upgrade
+  unsupported:  7.3 and older; upgrade to a supported branch
+  setups:       php-fpm, Apache mod_php (highest risk), php-cgi, LiteSpeed, FrankenPHP, Docker php images
+
+constraints:
+  MUST     check the PHP that serves web requests, not only the command-line php
+  MUST     show what you found and the exact commands, then wait for my approval before changing anything
+  MUST     update with the system package manager or a newer base image tag
+  MUST     restart every PHP worker after the update
+  MUST NOT present a configuration change as a fix; PHP says none mitigates this
+  MUST NOT build PHP from source unless I ask
+  SHOULD   start with internet-facing servers, Apache mod_php first
+  OPEN     if it cannot be updated today, should I cut its internet access until it can?
+
+verify:
+  test "every web-serving PHP is at or above the fixed version for its branch"
+  test "the version reported by the web server matches the installed package"
+  review every PHP worker was restarted after the update
+
+returns: report of versions before and after, what was restarted, anything still vulnerable

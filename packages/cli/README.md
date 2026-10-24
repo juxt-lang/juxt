@@ -25,7 +25,19 @@
 
 **Juxt-lang is the language for directing AI agents.** This package is its command-line tool. In one command it gives any coding agent *Juxt mode*: say `use juxt` and your request is compiled into a short, reviewable program with rules, open questions and the checks that prove the work is done, **before any code is written**.
 
+## Security update: fix PHP2Shell with Juxt
+
+PHP2Shell (CVE-2026-109618, CVE-2026-109619) lets attackers run code on PHP web servers without logging in, and it is being exploited now. Updating PHP is the only fix. This Juxt program has your AI agent find every PHP that serves your site, ask before changing anything, update, restart and prove the fix:
+
+```sh
+npx juxt-lang init               # once per repo
+npx juxt-lang fix php2shell      # writes juxt/php2shell.juxt
+```
+
+Then tell your agent: **`use juxt: run juxt/php2shell.juxt`**. No install? Paste [the program](https://github.com/juxt-lang/juxt/blob/main/examples/php2shell.juxt) into any AI agent that can run commands. Details and fixed versions: [juxt-lang.github.io/#/php2shell](https://juxt-lang.github.io/#/php2shell).
+
 ## Quick start
+
 
 ```sh
 npx juxt-lang init
@@ -60,6 +72,7 @@ Understood as
 | Command | What it does | Needs |
 |---|---|---|
 | `juxt init [--host <h>] [--force]` | Install the Juxt skill and write `juxt/context.juxt` from your repo | bash, git |
+| `juxt fix <recipe>` | Write a ready-made fix program into `juxt/`, e.g. `juxt fix php2shell` | Node |
 | `juxt lint [files...]` | Check `.juxt` programs: header, blocks, constraints, verify checks, unresolved `OPEN` questions | Node |
 | `juxt ir <file>` | Print a program's intermediate representation as JSON, for tooling | Node |
 | `juxt digest [1d]` | What changed in the repo, by area, with risks flagged | bash, git |

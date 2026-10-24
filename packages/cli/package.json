@@ -1,18 +1,23 @@
 {
   "name": "juxt-lang",
-  "version": "0.1.2",
-  "description": "Juxt-lang CLI: add Juxt mode to any coding agent, lint .juxt programs, and get git-computed repo digests. Many minds, one intent.",
+  "version": "0.2.0",
+  "description": "Juxt-lang CLI: add Juxt mode to any coding agent, run ready-made fix programs (npx juxt-lang fix php2shell), lint .juxt programs and get git-computed repo digests.",
   "keywords": [
-    "juxt",
-    "juxt-lang",
-    "ai-agents",
     "agent-skills",
+    "ai-agents",
     "claude-code",
+    "cli",
     "codex",
     "cursor",
+    "cve-2026-109618",
+    "cve-2026-109619",
+    "juxt",
+    "juxt-lang",
     "llm",
-    "spec-driven-development",
-    "cli"
+    "php",
+    "php2shell",
+    "security",
+    "spec-driven-development"
   ],
   "homepage": "https://juxt-lang.github.io/",
   "repository": {
@@ -39,6 +44,7 @@
     "bin",
     "lib",
     "skill",
+    "recipes",
     "README.md",
     "LICENSE",
     "NOTICE"
