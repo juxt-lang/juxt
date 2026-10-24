@@ -29,12 +29,23 @@
 
 PHP2Shell (CVE-2026-109618, CVE-2026-109619) lets attackers run code on PHP web servers without logging in, and it is being exploited now. Updating PHP is the only fix. This Juxt program has your AI agent find every PHP that serves your site, ask before changing anything, update, restart and prove the fix:
 
-```sh
-npx juxt-lang init               # once per repo
-npx juxt-lang fix php2shell      # writes juxt/php2shell.juxt
+**Ask your AI to do it.** Paste this one message into Claude Code, Codex, Cursor, Gemini CLI or any agent that can run commands:
+
+```text
+Run npx -y juxt-lang init and npx -y juxt-lang fix php2shell in this project, then follow juxt/php2shell.juxt exactly: show me what you find and the commands you plan to run, and wait for my OK before changing anything.
 ```
 
-Then tell your agent: **`use juxt: run juxt/php2shell.juxt`**. No install? Paste [the program](https://github.com/juxt-lang/juxt/blob/main/examples/php2shell.juxt) into any AI agent that can run commands. Details and fixed versions: [juxt-lang.github.io/#/php2shell](https://juxt-lang.github.io/#/php2shell).
+**Or run it from a terminal** (Node 18+):
+
+| Agent | Commands |
+|---|---|
+| Claude Code | `npx -y juxt-lang init --host claude && npx -y juxt-lang fix php2shell && claude "use juxt: run juxt/php2shell.juxt"` |
+| Codex | `npx -y juxt-lang init && npx -y juxt-lang fix php2shell && codex "use juxt: run juxt/php2shell.juxt"` |
+| Gemini CLI | `npx -y juxt-lang init --host gemini && npx -y juxt-lang fix php2shell && gemini -i "use juxt: run juxt/php2shell.juxt"` |
+| Cursor | `npx -y juxt-lang init --host cursor && npx -y juxt-lang fix php2shell`, then in the agent chat: `use juxt: run juxt/php2shell.juxt` |
+| No Node on the server | `curl -fsSLo php2shell.juxt https://raw.githubusercontent.com/juxt-lang/juxt/main/examples/php2shell.juxt`, then paste it into your agent |
+
+Run these from your project folder, or on the server itself. The agent always shows what it found and asks before changing anything. Details and fixed versions: [juxt-lang.github.io/#/php2shell](https://juxt-lang.github.io/#/php2shell).
 
 ## Quick start
 

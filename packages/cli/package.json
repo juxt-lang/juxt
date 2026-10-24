@@ -1,6 +1,6 @@
 {
   "name": "juxt-lang",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Juxt-lang CLI: add Juxt mode to any coding agent, run ready-made fix programs (npx juxt-lang fix php2shell), lint .juxt programs and get git-computed repo digests.",
   "keywords": [
     "agent-skills",
