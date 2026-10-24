@@ -147,7 +147,7 @@ agent-skills/juxt/    Portable Agent Skills version for Codex and others
 examples/             Example .juxt programs
 spec/LANGUAGE.md      Language summary (the full specification is The Juxt Book)
 packages/cli/          The juxt-lang npm CLI
-docs/                 The website, served by GitHub Pages
+docs/                 Redirect to the website (source: juxt-lang/juxt-lang.github.io)
 assets/               Logo, banner and brand files
 ```
 
