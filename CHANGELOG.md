@@ -2,6 +2,14 @@
 
 All notable changes to this project are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses [Semantic Versioning](https://semver.org/).
 
+## [0.3.0] - 2026-10-25
+
+### Changed
+- `php2shell` recipe is now a full Juxt program: four agents (scout, planner, patcher, verifier) in a pipeline with typed handoffs, an approval gate, policy, limits, observability and a receipt. It runs when pasted into any AI agent, with no install.
+
+### Added
+- Help for teams patching many servers; GitHub Sponsor button and npm `funding` link to the contact page.
+
 ## [0.2.1] - 2026-10-24
 
 ### Changed
@@ -43,6 +51,7 @@ First public preview.
 - `juxt-lang` npm CLI (`npx juxt-lang init | lint | ir | digest | facts | hosts`).
 - Language summary (3.4), example programs, eval suite and website.
 
+[0.3.0]: https://github.com/juxt-lang/juxt/releases/tag/v0.3.0
 [0.2.1]: https://github.com/juxt-lang/juxt/releases/tag/v0.2.1
 [0.2.0]: https://github.com/juxt-lang/juxt/releases/tag/v0.2.0
 [0.1.2]: https://github.com/juxt-lang/juxt/releases/tag/v0.1.2

@@ -1,6 +1,6 @@
 {
   "name": "juxt-lang",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Juxt-lang CLI: add Juxt mode to any coding agent, run ready-made fix programs (npx juxt-lang fix php2shell), lint .juxt programs and get git-computed repo digests.",
   "keywords": [
     "agent-skills",
@@ -65,5 +65,9 @@
       "name": "juxt-lang",
       "email": "martian.coders.x@gmail.com"
     }
-  ]
+  ],
+  "funding": {
+    "type": "individual",
+    "url": "https://juxt-lang.github.io/#/contact"
+  }
 }

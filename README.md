@@ -41,10 +41,15 @@ Understood as
 
 PHP2Shell (CVE-2026-109618, CVE-2026-109619) lets attackers run code on PHP web servers without logging in, and it is being exploited now. Updating PHP is the only fix. This Juxt program has your AI agent find every PHP that serves your site, ask before changing anything, update, restart and prove the fix:
 
-**Ask your AI to do it.** Paste this one message into Claude Code, Codex, Cursor, Gemini CLI or any agent that can run commands:
+**Paste it into your AI.** The fix is a Juxt program that carries its own instructions, so it runs in Claude Code, Codex, Cursor, Gemini CLI or any agent that can run commands, with nothing to install. Copy [php2shell.juxt](https://github.com/juxt-lang/juxt/blob/main/examples/php2shell.juxt) and paste it in. It runs four agents in a pipeline:
 
 ```text
-Run npx -y juxt-lang init and npx -y juxt-lang fix php2shell in this project, then follow juxt/php2shell.juxt exactly: show me what you find and the commands you plan to run, and wait for my OK before changing anything.
+topology: pipeline(scout -> planner -> approval -> patcher -> verifier)
+  scout    => planner   { surfaces[], cli_version, web_sapi_version, exposure }
+  planner  => you       { plan[], commands[], risk, downtime }
+  you      => patcher   { approved_commands[] }
+  patcher  => verifier  { changed[], restarted[] }
+policy: read-only until the plan is approved
 ```
 
 **Or run it from a terminal** (Node 18+):
@@ -58,6 +63,8 @@ Run npx -y juxt-lang init and npx -y juxt-lang fix php2shell in this project, th
 | No Node on the server | `curl -fsSLo php2shell.juxt https://raw.githubusercontent.com/juxt-lang/juxt/main/examples/php2shell.juxt`, then paste it into your agent |
 
 Run these from your project folder, or on the server itself. The agent always shows what it found and asks before changing anything. Details and fixed versions: [juxt-lang.github.io/#/php2shell](https://juxt-lang.github.io/#/php2shell).
+
+**Patching many servers, or no in-house team?** The creator of Juxt can help roll the fix out across fleets, CI images and Kubernetes: [email Amit](mailto:amit.nilajkar@gmail.com?subject=PHP2Shell%3A%20help%20patching%20our%20servers) or see the [contact page](https://juxt-lang.github.io/#/contact). If this helped, [star the repo](https://github.com/juxt-lang/juxt).
 
 ## Why Juxt
 
