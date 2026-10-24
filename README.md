@@ -94,7 +94,22 @@ To try it for one session from a clone, run `claude --plugin-dir ./plugins/juxt`
 
 ### Codex, Cursor, Gemini CLI and other Agent Skills tools
 
-Copy `agent-skills/juxt/` into your repo's skills folder (for Codex, `.agents/skills/juxt/`) and say "use juxt" as usual. It follows the open Agent Skills (`SKILL.md`) format.
+```sh
+npx juxt-lang init              # installs the skill in .agents/skills/juxt and writes juxt/context.juxt
+npx juxt-lang init --host all   # also .claude, .cursor and .gemini skill folders
+```
+
+Then say "use juxt" as usual. The skill follows the open Agent Skills (`SKILL.md`) format, so you can also copy `agent-skills/juxt/` by hand.
+
+### CLI
+
+```sh
+npx juxt-lang lint              # check juxt/*.juxt programs (non-zero exit on errors, CI-friendly)
+npx juxt-lang ir <file.juxt>    # intermediate representation as JSON
+npx juxt-lang digest 1d         # what changed, by area, from git only
+```
+
+See [packages/cli](packages/cli) for every command.
 
 ## Commands
 
@@ -129,6 +144,7 @@ plugins/juxt/         Claude Code plugin: skills, reviewer subagent, scripts, ev
 agent-skills/juxt/    Portable Agent Skills version for Codex and others
 examples/             Example .juxt programs
 spec/LANGUAGE.md      Language summary (the full specification is The Juxt Book)
+packages/cli/          The juxt-lang npm CLI
 docs/                 The website, served by GitHub Pages
 assets/               Logo, banner and brand files
 ```
@@ -138,7 +154,7 @@ assets/               Logo, banner and brand files
 | Status | Item |
 |---|---|
 | ✅ 0.1 | Juxt mode, digest, cited status, host discovery, init, receipts, reviewer subagent, evals |
-| 🔜 | `juxt` CLI: `juxt lint`, `juxt render --ir` |
+| ✅ 0.1 | `juxt-lang` CLI on npm: `init`, `lint`, `ir`, `digest`, `facts`, `hosts` |
 | 🔜 | Gateway for answer tiers (recall → compiled → small model → frontier) |
 | 🧭 | Team blocks: typed handoffs, `remote agent` over A2A, `tools` over MCP |
 | 🧭 | Enterprise blocks: triggers, fleets and rollouts, architecture fitness checks |

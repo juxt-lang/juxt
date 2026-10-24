@@ -15,6 +15,7 @@ First public preview.
 - `/juxt:hosts`: discovery of the host's native skills, commands, subagents and MCP servers.
 - `/juxt:init` and `/juxt:receipts`.
 - Portable Agent Skills copy for Codex and other `SKILL.md` hosts.
+- `juxt-lang` npm CLI (`npx juxt-lang init | lint | ir | digest | facts | hosts`).
 - Language summary (3.4), example programs, eval suite and website.
 
 [0.1.0]: https://github.com/juxt-lang/juxt/releases/tag/v0.1.0

@@ -25,3 +25,8 @@ jobs:
           bash plugins/juxt/scripts/digest.sh 30d
           bash plugins/juxt/scripts/facts.sh 30d
           bash plugins/juxt/scripts/hosts.sh --brief
+      - name: CLI tests and example lint
+        working-directory: packages/cli
+        run: |
+          npm test
+          node bin/juxt.js lint ../../examples/*.juxt
