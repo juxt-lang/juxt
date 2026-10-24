@@ -11,7 +11,7 @@
   <a href="https://github.com/juxt-lang/juxt/blob/main/LICENSE"><img alt="License: Apache-2.0" src="https://img.shields.io/badge/license-Apache--2.0-F7DF1E"></a>
 </p>
 
-<p align="center"><b>Created by Amit N</b></p>
+<p align="center"><a href="https://juxt-lang.github.io/#/contact"><b>Created by Amit N</b></a> · <a href="https://juxt-lang.github.io/#/contact">Contact</a></p>
 
 <p align="center">
   <a href="https://juxt-lang.github.io/"><b>Website</b></a> ·

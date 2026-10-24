@@ -10,7 +10,7 @@
   <img alt="Agent Skills" src="https://img.shields.io/badge/Agent%20Skills-SKILL.md-5FD3A4">
 </p>
 
-<p align="center"><b>Created by Amit N</b></p>
+<p align="center"><a href="https://juxt-lang.github.io/#/contact"><b>Created by Amit N</b></a> · <a href="https://juxt-lang.github.io/#/contact">Contact</a></p>
 
 <p align="center">
   <a href="https://juxt-lang.github.io/"><b>Website</b></a> ·
