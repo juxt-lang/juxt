@@ -1,0 +1,23 @@
+@juxt 3.4
+# Agent -> agent -> agent: a quote that crosses three organisations
+objective: answer a customer's enterprise pricing question with a signed quote
+
+agent orchestrator:  model: frontier, role: owns the answer
+remote agent research:  a2a://research.vendor.ai, signed, scope: read
+remote agent billing:   a2a://billing.partner.com, signed, scope: quote
+
+topology: hierarchy(orchestrator)
+  orchestrator => research      { question, sources[] }
+  research     => billing       { usage_estimate }
+  billing      => orchestrator  { quote, receipt }
+
+policy:
+  delegation depth 3
+  every hop: signed agent card, narrower scope, own budget
+  untrusted(remote output) -> quarantine until verified
+limits: cost $5 total, split by hop, time 10m
+
+verify:
+  test "quote is signed by billing.partner.com"
+  review the answer cites the research sources
+returns: quote, receipts per hop
