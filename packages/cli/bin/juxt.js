@@ -111,10 +111,27 @@ const AGENTS = {
   cursor: { bin: 'cursor-agent', args: p => [p], host: 'cursor' },
 };
 const WIN = process.platform === 'win32';
-function has(bin) {
-  return WIN ? spawnSync('where', [bin], { stdio: 'ignore' }).status === 0
-             : spawnSync('sh', ['-c', `command -v ${bin}`], { stdio: 'ignore' }).status === 0;
+function winFind(bin) {
+  // PATH first, then the usual install folders (npm global, native installers).
+  const r = spawnSync('where.exe', [bin], { encoding: 'utf8' });
+  if (r.status === 0 && r.stdout.trim()) return r.stdout.trim().split(/\r?\n/)[0];
+  const env = process.env, dirs = [];
+  if (env.APPDATA) dirs.push(path.join(env.APPDATA, 'npm'));
+  if (env.USERPROFILE) dirs.push(path.join(env.USERPROFILE, '.local', 'bin'), path.join(env.USERPROFILE, 'AppData', 'Roaming', 'npm'));
+  if (env.LOCALAPPDATA) dirs.push(path.join(env.LOCALAPPDATA, 'Programs', bin), path.join(env.LOCALAPPDATA, 'Microsoft', 'WinGet', 'Links'));
+  const g = spawnSync('npm.cmd', ['prefix', '-g'], { encoding: 'utf8', shell: true });
+  if (g.status === 0 && g.stdout.trim()) dirs.push(g.stdout.trim());
+  for (const d of dirs) for (const ext of ['.cmd', '.exe', '.ps1', '']) {
+    const f = path.join(d, bin + ext);
+    if (fs.existsSync(f)) return f;
+  }
+  return null;
 }
+function find(bin) {
+  if (WIN) return winFind(bin);
+  return spawnSync('sh', ['-c', `command -v ${bin}`], { stdio: 'ignore' }).status === 0 ? bin : null;
+}
+function has(bin) { return !!find(bin); }
 function run(bin, args, cwd) {
   // Windows agents install as .cmd shims, which need a shell; quote every argument.
   if (WIN) return spawnSync([bin, ...args].map(a => `"${String(a).replace(/"/g, '\\"')}"`).join(' '), { stdio: 'inherit', cwd, shell: true });
@@ -139,13 +156,23 @@ function quickFix(name, args) {
   }
   const prompt = `Run the Juxt program in juxt/${name}.juxt. Show me what you find and the exact commands, and wait for my approval before changing anything.`;
   const launch = !args.includes('--no-launch') && (args.includes('--launch') || (process.stdout.isTTY && process.stdin.isTTY));
-  if (agent && launch && has(AGENTS[agent].bin)) {
+  const forced = opt('--agent') !== null;
+  const exe = agent ? (find(AGENTS[agent].bin) || (forced ? AGENTS[agent].bin : null)) : null;
+  if (agent && launch && exe) {
     console.log(`${c('32', 'start')} ${AGENTS[agent].bin} · it will ask before changing anything\n`);
-    const r = run(AGENTS[agent].bin, AGENTS[agent].args(prompt), root);
+    const r = run(exe, AGENTS[agent].args(prompt), root);
+    if (r.error || (r.status !== 0 && r.status !== null && !find(AGENTS[agent].bin))) {
+      console.log(`\nCould not start ${AGENTS[agent].bin}. Paste this into your AI agent instead:\n  ${c('1', prompt)}`);
+    }
     return r.status ?? 0;
   }
   console.log(`\nNext, tell your AI agent:\n  ${c('1', prompt)}`);
-  if (!agent) console.log('\nNo agent CLI found (claude, codex, gemini, cursor-agent). Paste the line above into any AI agent that can run commands here.');
+  if (!agent) {
+    console.log('\nNo agent command-line tool found (claude, codex, gemini, cursor-agent).');
+    console.log('  Paste the line above into the Claude, ChatGPT or Cursor app with this folder open,');
+    console.log(`  or install one and run again, e.g.  npm install -g @anthropic-ai/claude-code`);
+    console.log(`  Already installed? Force it:  npx juxt-lang php2shell --agent claude`);
+  }
   return 0;
 }
 
