@@ -2,6 +2,11 @@
 
 All notable changes to this project are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses [Semantic Versioning](https://semver.org/).
 
+## [0.4.0] - 2026-10-25
+
+### Added
+- `npx juxt-lang php2shell`: one command that writes the fix program, sets up Juxt for your agent and starts it (Claude Code, Codex, Gemini CLI or Cursor). Options: `--agent`, `--print`, `--no-launch`.
+
 ## [0.3.0] - 2026-10-25
 
 ### Changed
@@ -51,6 +56,7 @@ First public preview.
 - `juxt-lang` npm CLI (`npx juxt-lang init | lint | ir | digest | facts | hosts`).
 - Language summary (3.4), example programs, eval suite and website.
 
+[0.4.0]: https://github.com/juxt-lang/juxt/releases/tag/v0.4.0
 [0.3.0]: https://github.com/juxt-lang/juxt/releases/tag/v0.3.0
 [0.2.1]: https://github.com/juxt-lang/juxt/releases/tag/v0.2.1
 [0.2.0]: https://github.com/juxt-lang/juxt/releases/tag/v0.2.0

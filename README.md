@@ -37,34 +37,27 @@ Understood as
   OPEN        cancel after shipping?  partial refunds?
 ```
 
-## Security update: fix PHP2Shell with Juxt
+## Security update: fix PHP2Shell in one command
 
-PHP2Shell (CVE-2026-109618, CVE-2026-109619) lets attackers run code on PHP web servers without logging in, and it is being exploited now. Updating PHP is the only fix. This Juxt program has your AI agent find every PHP that serves your site, ask before changing anything, update, restart and prove the fix:
+PHP2Shell (CVE-2026-109618, CVE-2026-109619) lets attackers run code on PHP web servers without logging in, and it is being exploited now. Updating PHP is the only fix. In your project folder or on the server, run:
 
-**Paste it into your AI.** The fix is a Juxt program that carries its own instructions, so it runs in Claude Code, Codex, Cursor, Gemini CLI or any agent that can run commands, with nothing to install. Copy [php2shell.juxt](https://github.com/juxt-lang/juxt/blob/main/examples/php2shell.juxt) and paste it in. It runs four agents in a pipeline:
-
-```text
-topology: pipeline(scout -> planner -> approval -> patcher -> verifier)
-  scout    => planner   { surfaces[], cli_version, web_sapi_version, exposure }
-  planner  => you       { plan[], commands[], risk, downtime }
-  you      => patcher   { approved_commands[] }
-  patcher  => verifier  { changed[], restarted[] }
-policy: read-only until the plan is approved
+```sh
+npx juxt-lang php2shell
 ```
 
-**Or run it from a terminal** (Node 18+):
+It finds your AI agent (Claude Code, Codex, Gemini CLI or Cursor), sets up Juxt and starts the fix. The agent shows what it found and asks before changing anything.
 
-| Agent | Commands |
+| Option | Use it to |
 |---|---|
-| Claude Code | `npx -y juxt-lang init --host claude && npx -y juxt-lang fix php2shell && claude "use juxt: run juxt/php2shell.juxt"` |
-| Codex | `npx -y juxt-lang init && npx -y juxt-lang fix php2shell && codex "use juxt: run juxt/php2shell.juxt"` |
-| Gemini CLI | `npx -y juxt-lang init --host gemini && npx -y juxt-lang fix php2shell && gemini -i "use juxt: run juxt/php2shell.juxt"` |
-| Cursor | `npx -y juxt-lang init --host cursor && npx -y juxt-lang fix php2shell`, then in the agent chat: `use juxt: run juxt/php2shell.juxt` |
-| No Node on the server | `curl -fsSLo php2shell.juxt https://raw.githubusercontent.com/juxt-lang/juxt/main/examples/php2shell.juxt`, then paste it into your agent |
+| `--agent codex` | Pick the agent: `claude`, `codex`, `gemini` or `cursor` |
+| `--print` | Print the Juxt program to paste into any AI chat |
+| `--no-launch` | Only write `juxt/php2shell.juxt` |
 
-Run these from your project folder, or on the server itself. The agent always shows what it found and asks before changing anything. Details and fixed versions: [juxt-lang.github.io/#/php2shell](https://juxt-lang.github.io/#/php2shell).
+In an AI chat instead? Type: `Run npx juxt-lang php2shell --print and follow it`
 
-**Patching many servers, or no in-house team?** The creator of Juxt can help roll the fix out across fleets, CI images and Kubernetes: [email Amit](mailto:amit.nilajkar@gmail.com?subject=PHP2Shell%3A%20help%20patching%20our%20servers) or see the [contact page](https://juxt-lang.github.io/#/contact). If this helped, [star the repo](https://github.com/juxt-lang/juxt).
+What runs is [a Juxt program](https://github.com/juxt-lang/juxt/blob/main/examples/php2shell.juxt) with four agents in a pipeline, `scout -> planner -> approval -> patcher -> verifier`: read-only until you approve, then patch, restart and prove. Fixed versions and details: [juxt-lang.github.io/#/php2shell](https://juxt-lang.github.io/#/php2shell).
+
+**Patching many servers, or no in-house team?** The creator of Juxt can help: [email Amit](mailto:amit.nilajkar@gmail.com?subject=PHP2Shell%3A%20help%20patching%20our%20servers) or see the [contact page](https://juxt-lang.github.io/#/contact). If this helped, [star the repo](https://github.com/juxt-lang/juxt).
 
 ## Why Juxt
 

@@ -24,6 +24,8 @@ Usage
   npx juxt-lang init [--host agents|claude|cursor|gemini|all] [--force]
       Add Juxt mode to this repo: installs the Agent Skill and writes juxt/context.juxt.
       Default host: agents (.agents/skills/juxt, read by Codex and other Agent Skills tools).
+  npx juxt-lang php2shell            Fix PHP2Shell: sets up and starts your AI agent
+      options: --agent claude|codex|gemini|cursor  --print  --no-launch
   npx juxt-lang fix <recipe>         Write a ready-made fix program, e.g. fix php2shell
   npx juxt-lang lint [files...]      Check .juxt programs (default: juxt/**/*.juxt)
   npx juxt-lang ir <file>            Print a program's intermediate representation as JSON
@@ -102,6 +104,42 @@ function fixCmd(args) {
   return 0;
 }
 
+const AGENTS = {
+  claude: { bin: 'claude', args: p => [p], host: 'claude' },
+  codex:  { bin: 'codex', args: p => [p], host: 'agents' },
+  gemini: { bin: 'gemini', args: p => ['-i', p], host: 'gemini' },
+  cursor: { bin: 'cursor-agent', args: p => [p], host: 'cursor' },
+};
+function has(bin) { return spawnSync('sh', ['-c', `command -v ${bin}`], { stdio: 'ignore' }).status === 0; }
+
+function quickFix(name, args) {
+  const opt = k => { const i = args.indexOf(k); return i >= 0 ? (args[i + 1] || '') : null; };
+  const src = path.join(RECIPES, name + '.juxt');
+  if (args.includes('--print')) { process.stdout.write(fs.readFileSync(src, 'utf8')); return 0; }
+  let agent = opt('--agent');
+  if (agent !== null && !AGENTS[agent]) { console.error(`juxt: unknown agent "${agent}". Use: ${Object.keys(AGENTS).join(', ')}`); return 2; }
+  const root = gitRoot();
+  const dst = path.join(root, 'juxt', name + '.juxt');
+  fs.mkdirSync(path.dirname(dst), { recursive: true });
+  fs.copyFileSync(src, dst);
+  console.log(`${c('32', 'ready')} juxt/${name}.juxt`);
+  if (!agent) agent = Object.keys(AGENTS).find(a => has(AGENTS[a].bin)) || null;
+  if (agent) {
+    const h = HOSTS[AGENTS[agent].host], hd = path.join(root, h);
+    if (!fs.existsSync(hd)) { copyDir(SKILL, hd); console.log(`${c('32', 'added')} ${h}`); }
+  }
+  const prompt = `Run the Juxt program in juxt/${name}.juxt. Show me what you find and the exact commands, and wait for my approval before changing anything.`;
+  const launch = !args.includes('--no-launch') && (args.includes('--launch') || (process.stdout.isTTY && process.stdin.isTTY));
+  if (agent && launch && has(AGENTS[agent].bin)) {
+    console.log(`${c('32', 'start')} ${AGENTS[agent].bin} · it will ask before changing anything\n`);
+    const r = spawnSync(AGENTS[agent].bin, AGENTS[agent].args(prompt), { stdio: 'inherit', cwd: root });
+    return r.status ?? 0;
+  }
+  console.log(`\nNext, tell your AI agent:\n  ${c('1', prompt)}`);
+  if (!agent) console.log('\nNo agent CLI found (claude, codex, gemini, cursor-agent). Paste the line above into any AI agent that can run commands here.');
+  return 0;
+}
+
 function walk(dir, out = []) {
   if (!fs.existsSync(dir)) return out;
   for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -145,6 +183,7 @@ function main(argv) {
       return diags.some(d => d.level === 'error') ? 1 : 0;
     }
     case 'fix': case 'recipe': return fixCmd(rest);
+    case 'php2shell': return quickFix('php2shell', rest);
     case 'digest': return runScript('digest.sh', rest);
     case 'facts': return runScript('facts.sh', rest);
     case 'hosts': return runScript('hosts.sh', rest);
