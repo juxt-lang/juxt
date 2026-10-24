@@ -4,8 +4,8 @@
 
 <p align="center">
   <a href="https://github.com/juxt-lang/juxt/actions/workflows/validate.yml"><img alt="Validate" src="https://github.com/juxt-lang/juxt/actions/workflows/validate.yml/badge.svg"></a>
-  <a href="LICENSE"><img alt="License: Apache-2.0" src="https://img.shields.io/badge/license-Apache--2.0-2E44F5"></a>
-  <img alt="Version 0.1.0" src="https://img.shields.io/badge/version-0.1.0-0C1322">
+  <a href="LICENSE"><img alt="License: Apache-2.0" src="https://img.shields.io/badge/license-Apache--2.0-F7DF1E"></a>
+  <img alt="Version 0.1.0" src="https://img.shields.io/badge/version-0.1.0-111111">
   <img alt="Claude Code plugin" src="https://img.shields.io/badge/Claude%20Code-plugin-D97757">
   <img alt="Agent Skills" src="https://img.shields.io/badge/Agent%20Skills-SKILL.md-5FD3A4">
 </p>

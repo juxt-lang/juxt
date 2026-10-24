@@ -3,12 +3,12 @@
 </p>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/juxt-lang"><img alt="npm version" src="https://img.shields.io/npm/v/juxt-lang?color=2E44F5&label=npm"></a>
-  <a href="https://www.npmjs.com/package/juxt-lang"><img alt="npm downloads" src="https://img.shields.io/npm/dm/juxt-lang?color=0C1322"></a>
+  <a href="https://www.npmjs.com/package/juxt-lang"><img alt="npm version" src="https://img.shields.io/npm/v/juxt-lang?color=F7DF1E&label=npm"></a>
+  <a href="https://www.npmjs.com/package/juxt-lang"><img alt="npm downloads" src="https://img.shields.io/npm/dm/juxt-lang?color=111111"></a>
   <a href="https://github.com/juxt-lang/juxt/actions/workflows/validate.yml"><img alt="CI" src="https://github.com/juxt-lang/juxt/actions/workflows/validate.yml/badge.svg"></a>
   <img alt="Node 18+" src="https://img.shields.io/node/v/juxt-lang?color=5FD3A4">
   <img alt="Zero dependencies" src="https://img.shields.io/badge/dependencies-0-5FD3A4">
-  <a href="https://github.com/juxt-lang/juxt/blob/main/LICENSE"><img alt="License: Apache-2.0" src="https://img.shields.io/badge/license-Apache--2.0-2E44F5"></a>
+  <a href="https://github.com/juxt-lang/juxt/blob/main/LICENSE"><img alt="License: Apache-2.0" src="https://img.shields.io/badge/license-Apache--2.0-F7DF1E"></a>
 </p>
 
 <p align="center">
