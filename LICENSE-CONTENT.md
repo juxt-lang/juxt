@@ -14,4 +14,4 @@ These are **not** open source and are not covered by the Apache licence:
 
 You may view them, link to them, and quote short passages with attribution ("Juxt-lang, created by Amit N"). You may not copy, republish, sell, translate, adapt or redistribute them, or use them to train or build a competing product, site or book, without written permission from Amit Nilajkar.
 
-For permission, open a [private advisory](https://github.com/juxt-lang/juxt/security/advisories/new) titled "Content licence", or email martian.coders.x@gmail.com.
+For permission, open a [private advisory](https://github.com/juxt-lang/juxt/security/advisories/new) titled "Content licence", or email amit.nilajkar@gmail.com.

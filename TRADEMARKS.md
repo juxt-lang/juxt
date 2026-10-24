@@ -23,4 +23,4 @@ Forks are welcome under the licence. Give your fork a different name and logo, r
 
 ## Permission and reports
 
-To ask for permission, or to report misuse, open a [private advisory](https://github.com/juxt-lang/juxt/security/advisories/new) titled "Trademark", or email martian.coders.x@gmail.com.
+To ask for permission, or to report misuse, open a [private advisory](https://github.com/juxt-lang/juxt/security/advisories/new) titled "Trademark", or email amit.nilajkar@gmail.com.
