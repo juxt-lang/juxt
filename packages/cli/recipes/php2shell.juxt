@@ -12,6 +12,11 @@ context:
   backport:     8.1, 8.0, 7.4 -> patched distro or LTS vendor package, or upgrade
   unsupported:  7.3 and older -> upgrade to a supported branch
   surfaces:     php-fpm, Apache mod_php (highest risk), php-cgi, LiteSpeed, FrankenPHP, Docker php images, CI images
+  look_in:      every Dockerfile* and Containerfile, compose files, Helm charts and k8s manifests, CI workflows,
+                and the host itself (php -v, running php-fpm, httpd and apache2, installed packages)
+  distro_php:   PHP installed by a package manager counts: apt php8.x-* and libapache2-mod-php*, apk php8x-*,
+                dnf or yum php-*. Its version string can stay old when the fix is backported, so check the
+                distro security tracker or package changelog for both CVEs before calling it fixed or vulnerable
 
 agent scout:     role: inventory every PHP surface, tools: read-only shell and files
 agent planner:   role: one remediation plan per surface, ranked by exposure
@@ -34,6 +39,7 @@ limits: iterations 3, network: package mirrors and image registries only
 
 constraints:
   MUST     check the PHP that serves web requests, not only the command-line php
+  MUST     list every surface in look_in, including PHP installed from distro packages, before planning
   MUST     present the plan and the exact commands, then wait for approval
   MUST     update with the system package manager or a newer base image tag
   MUST     restart every PHP worker after the update
@@ -45,11 +51,13 @@ constraints:
 verify:
   test "every web-serving PHP is at or above the fixed release for its branch"
   test "the version the web server reports matches the installed package"
+  test "every Dockerfile, compose file and CI workflow was inspected"
   review every PHP worker restarted after the update, by verifier with fresh context
 
 observe: log each command with its exit code, in order
 
 returns:
   report:   per surface, version before -> after, restarted, residual risk
-  receipt:  "Patched PHP2Shell with Juxt · juxt-lang.github.io/#/php2shell"
+  receipt:  only if every verify check passed: "Patched PHP2Shell with Juxt · juxt-lang.github.io/#/php2shell"
+  pending:  otherwise: "Not yet proven patched" and the exact steps left, per surface
   help:     "Many servers or no in-house team? The creator can help: juxt-lang.github.io/#/contact"

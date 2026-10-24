@@ -2,6 +2,11 @@
 
 All notable changes to this project are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses [Semantic Versioning](https://semver.org/).
 
+## [0.4.3] - 2026-10-25
+
+### Changed
+- `php2shell` program, after a live test on a real open-source project: the scout now inspects every Dockerfile, compose file, Helm chart, k8s manifest, CI workflow and the host; PHP installed from distro packages (apt, apk, dnf) counts, with backported fixes checked against the distro's security tracker; the receipt is printed only when every verify check passes, otherwise the agent lists what is left.
+
 ## [0.4.2] - 2026-10-25
 
 ### Fixed
@@ -68,6 +73,7 @@ First public preview.
 - `juxt-lang` npm CLI (`npx juxt-lang init | lint | ir | digest | facts | hosts`).
 - Language summary (3.4), example programs, eval suite and website.
 
+[0.4.3]: https://github.com/juxt-lang/juxt/releases/tag/v0.4.3
 [0.4.2]: https://github.com/juxt-lang/juxt/releases/tag/v0.4.2
 [0.4.1]: https://github.com/juxt-lang/juxt/releases/tag/v0.4.1
 [0.4.0]: https://github.com/juxt-lang/juxt/releases/tag/v0.4.0
