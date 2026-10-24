@@ -16,7 +16,7 @@ cd "$(git rev-parse --show-toplevel)" || exit 0
   [ -n "$tags" ] && echo "releases tagged: $tags"
   commits=$(git log --since="$since" --no-merges --oneline | wc -l | tr -d ' ')
   authors=$(git log --since="$since" --no-merges --pretty='%an' | sort -u | wc -l | tr -d ' ')
-  echo "$commits commits by $authors people"
+  [ "$commits" = 1 ] && cw=commit || cw=commits; [ "$authors" = 1 ] && pw=person || pw=people; echo "$commits $cw by $authors $pw"
   areas=$(git log --since="$since" --name-only --pretty=format: | sed '/^$/d' | sort -u | bash "$here/areas.sh" | awk -F'\t' '{c[$1]++} END {for (a in c) print c[a] " " a}' | sort -rn | head -5 | awk '{printf "%s (%s files); ", $2, $1}' | sed 's/; $//')
   [ -n "$areas" ] && echo "most changed areas: $areas"
   git log --since="$since" --no-merges --pretty='%s (%h)' | grep -iE '^(feat|feature|add)' | head -5 | sed -E 's/^(feat|feature)(\([^)]*\))?:[[:space:]]*//I; s/^/feature: /'
