@@ -104,6 +104,24 @@ Understood as
 
 Prefer a short command? `npm i -g juxt-lang` installs `juxt`.
 
+## Use it from code
+
+```js
+// JavaScript: npm i juxt-lang
+const { lint, toIR } = require('juxt-lang');
+const { prog, diags } = lint(require('fs').readFileSync('juxt/ratelimit.juxt', 'utf8'));
+const ir = toIR(prog);   // { juxt, kind, blocks: { constraints: [{ level, rule }], ... } }
+```
+
+```python
+# Python: call the CLI's JSON output
+import json, subprocess
+ir = json.loads(subprocess.run(["npx", "-y", "juxt-lang", "ir", "juxt/ratelimit.juxt"],
+                               capture_output=True, text=True).stdout)
+```
+
+Rust and other languages work the same way through `npx juxt-lang ir`. Native Python and Rust packages are on the roadmap. Full language reference, compiler internals and diagrams: [juxt-lang.github.io/#/language](https://juxt-lang.github.io/#/language).
+
 ## In CI
 
 `juxt lint` exits non-zero on errors, so a pull request with a malformed program, or a task with no verify check, fails the build:

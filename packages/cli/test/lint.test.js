@@ -35,3 +35,10 @@ test('fix recipes lint without errors', () => {
     assert.deepStrictEqual(diags.filter(d => d.level === 'error'), [], f);
   }
 });
+
+test('two-word keyword with a name: remote agent billing', () => {
+  const { prog, diags } = lint('@juxt 3.4\nremote agent billing:  a2a://billing.acme.dev, signed\n');
+  assert.deepStrictEqual(diags, []);
+  assert.strictEqual(prog.blocks[0].name, 'remote agent');
+  assert.strictEqual(prog.blocks[0].label, 'billing');
+});

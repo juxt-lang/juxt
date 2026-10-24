@@ -25,6 +25,9 @@ function parse(src) {
       const m = line.match(/^([a-z_][a-z_ ]*?)(?:\s+([^:]+?))?:\s*(.*)$/);
       if (!m) { diags.push({ line: n, level: 'error', msg: `expected "block:" at column 1, got "${line.trim()}"` }); cur = null; return; }
       let name = m[1].trim(); let label = m[2] ? m[2].trim() : null;
+      if (!KNOWN.has(name) && label && KNOWN.has(name + ' ' + label.split(/\s+/)[0])) {
+        const parts = label.split(/\s+/); name = name + ' ' + parts.shift(); label = parts.join(' ') || null;
+      }
       if (!KNOWN.has(name)) {
         const two = name.split(' ');
         if (KNOWN.has(two[0])) { label = [two.slice(1).join(' '), label].filter(Boolean).join(' ') || null; name = two[0]; }

@@ -2,6 +2,15 @@
 
 All notable changes to this project are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses [Semantic Versioning](https://semver.org/).
 
+## [0.5.0] - 2026-10-25
+
+### Added
+- JavaScript API: `require('juxt-lang')` exports `lint`, `toIR` and `parse`.
+- `examples/ratelimit-team.juxt`: a full team program (agents, typed handoffs, A2A, policy, limits, tiers, eval).
+
+### Fixed
+- Linter: two-word keywords followed by a name, such as `remote agent billing:`, are recognised.
+
 ## [0.4.4] - 2026-10-25
 
 ### Changed
@@ -78,6 +87,7 @@ First public preview.
 - `juxt-lang` npm CLI (`npx juxt-lang init | lint | ir | digest | facts | hosts`).
 - Language summary (3.4), example programs, eval suite and website.
 
+[0.5.0]: https://github.com/juxt-lang/juxt/releases/tag/v0.5.0
 [0.4.4]: https://github.com/juxt-lang/juxt/releases/tag/v0.4.4
 [0.4.3]: https://github.com/juxt-lang/juxt/releases/tag/v0.4.3
 [0.4.2]: https://github.com/juxt-lang/juxt/releases/tag/v0.4.2

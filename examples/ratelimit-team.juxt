@@ -1,0 +1,52 @@
+@juxt 3.4
+# Rate-limit the public API without ever throttling billing
+extends: org/payments-base.juxt
+
+context:
+  stack: node 22, express 4.19, redis 7.4
+  test:  npm test
+
+objective: rate-limit /api/v1 to 100 req/min per key, p99 overhead < 5ms
+
+constraints:
+  MUST     idempotent writes
+  MUST NOT touch /api/internal
+  SHOULD   reuse lib/redis.ts
+  OPEN     enterprise keys: higher limit?
+
+contract:
+  in:        request, api_key
+  out:       429 { retry_after: duration } when over limit
+  invariant: billing never sees a throttled request
+  on_error:  redis down -> fail open, alert on-call
+
+pattern: token-bucket, resilience(fail-open)
+
+agent planner:   model: frontier, role: plan and contract
+agent builder:   model: fast, tools: mcp://github, mcp://redis(read)
+agent reviewer:  model: frontier, context: fresh, role: review against every MUST
+remote agent billing:  a2a://billing.acme.dev, signed
+
+topology: orchestrator(planner)
+  planner  => builder   { plan, contract }
+  builder  => reviewer  { diff, decisions }
+  reviewer -> builder until verify
+  builder  ~> billing on limits_changed { tier_table }
+
+host:    prefer native
+harness: claude-code, sandbox: container
+policy:
+  untrusted(web) -> quarantine
+  approval before deploy
+limits:  tokens 200k, iterations 4, cost $3, time 20m
+chat:    T0 recall -> T1 compiled -> T2 small -> T3 frontier
+
+verify:
+  test "101st request in a minute gets 429"
+  bench p99 < 5ms
+  review against every MUST
+eval:    golden/ratelimit/*.yaml in ci
+
+observe:  trace otel, cost per agent
+returns:  diff, adr, risks
+receipts: on
