@@ -1,0 +1,12 @@
+@juxt 3.4
+# Used by /juxt:digest and /juxt:status to group changes by bounded context.
+architecture:
+  context orders   paths: src/orders, src/api/orders
+  context billing  paths: src/billing, src/payments
+  context catalog  paths: src/catalog
+  allow web -> gateway -> [orders, catalog]
+  allow orders ~> billing via events(order.placed)
+  deny  * -> *.db unless owner
+fitness:
+  cycles = 0
+  coupling(orders, billing) = async-only

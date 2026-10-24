@@ -1,0 +1,10 @@
+{
+  "name": "juxt",
+  "displayName": "Juxt",
+  "description": "Juxt mode for coding agents: say \"use juxt\" and your request is compiled into a short program with rules, open questions and checks before any code is written. Includes a zero-token repo digest, cited status drafts, host capability discovery and savings receipts.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Amit Nilajkar"
+  },
+  "keywords": ["juxt", "spec-driven", "agents", "status", "digest", "tokens"]
+}

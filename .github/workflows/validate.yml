@@ -1,0 +1,27 @@
+name: validate
+on: [push, pull_request]
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 50
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install Claude Code
+        run: npm install -g @anthropic-ai/claude-code
+      - name: Validate marketplace and plugin
+        run: |
+          claude plugin validate . --strict
+          claude plugin validate plugins/juxt --strict
+      - name: Portable copy is in sync
+        run: |
+          bash tools/sync-agent-skills.sh
+          git diff --exit-code agent-skills/
+      - name: Scripts run on this repo
+        run: |
+          bash plugins/juxt/scripts/digest.sh 30d
+          bash plugins/juxt/scripts/facts.sh 30d
+          bash plugins/juxt/scripts/hosts.sh --brief

@@ -1,0 +1,8 @@
+@juxt 3.4
+# Rules /juxt:status uses to set Red, Amber or Green. Numbers are never generated.
+status:
+  rag: red   if revert in main or incident(sev1) open
+       amber if open question older than 2d or source changed without tests
+       green otherwise
+view standup:    altitude: team, 3-5 bullets, cite facts
+view leadership: altitude: exec, 3 sentences, cite facts, draft only

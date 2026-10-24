@@ -1,0 +1,18 @@
+@juxt 3.4
+objective:   POST /orders/{id}/cancel cancels the order and refunds the original card
+constraints:
+  MUST     idempotent writes (payments domain rule)
+  MUST NOT change the public order schema
+  SHOULD   reuse payments.refund()
+contract:
+  in: order id, authenticated user
+  out: 200 with the cancelled order, or 409 when not cancellable
+  on_error: refund fails -> order stays active, error logged, 502
+pattern:     saga: cancel -> refund, compensate on failure
+verify:
+  test "cancel twice -> one refund"
+  test "shipped order -> 409"
+  test "refund failure -> order still active"
+  review against every MUST
+resolved:
+  no cancels after shipping; full refunds only

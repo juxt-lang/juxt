@@ -1,0 +1,16 @@
+{
+  "name": "juxt-lang",
+  "description": "Plugins for Juxt, the language for directing AI agents.",
+  "owner": {
+    "name": "Amit Nilajkar"
+  },
+  "plugins": [
+    {
+      "name": "juxt",
+      "source": "./plugins/juxt",
+      "description": "Juxt mode, repo digest, cited status drafts, host discovery and savings receipts.",
+      "category": "development",
+      "tags": ["spec-driven", "agents", "productivity"]
+    }
+  ]
+}

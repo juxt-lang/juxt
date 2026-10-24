@@ -1,0 +1,11 @@
+@juxt 3.4
+# Roadmap feature (juxt watch): keep the stack current in waves.
+stack:
+  node 22, express 4.19, redis 7.4
+freshness:
+  security within 48h
+  minor    within 30d
+  major    within 120d, approval by role(architect)
+on: release(stack.*) -> recipe upgrade
+rollout: canary 3 -> wave 25% -> all
+  stop if verify < 100%
