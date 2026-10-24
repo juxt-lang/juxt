@@ -110,7 +110,16 @@ const AGENTS = {
   gemini: { bin: 'gemini', args: p => ['-i', p], host: 'gemini' },
   cursor: { bin: 'cursor-agent', args: p => [p], host: 'cursor' },
 };
-function has(bin) { return spawnSync('sh', ['-c', `command -v ${bin}`], { stdio: 'ignore' }).status === 0; }
+const WIN = process.platform === 'win32';
+function has(bin) {
+  return WIN ? spawnSync('where', [bin], { stdio: 'ignore' }).status === 0
+             : spawnSync('sh', ['-c', `command -v ${bin}`], { stdio: 'ignore' }).status === 0;
+}
+function run(bin, args, cwd) {
+  // Windows agents install as .cmd shims, which need a shell; quote every argument.
+  if (WIN) return spawnSync([bin, ...args].map(a => `"${String(a).replace(/"/g, '\\"')}"`).join(' '), { stdio: 'inherit', cwd, shell: true });
+  return spawnSync(bin, args, { stdio: 'inherit', cwd });
+}
 
 function quickFix(name, args) {
   const opt = k => { const i = args.indexOf(k); return i >= 0 ? (args[i + 1] || '') : null; };
@@ -132,7 +141,7 @@ function quickFix(name, args) {
   const launch = !args.includes('--no-launch') && (args.includes('--launch') || (process.stdout.isTTY && process.stdin.isTTY));
   if (agent && launch && has(AGENTS[agent].bin)) {
     console.log(`${c('32', 'start')} ${AGENTS[agent].bin} · it will ask before changing anything\n`);
-    const r = spawnSync(AGENTS[agent].bin, AGENTS[agent].args(prompt), { stdio: 'inherit', cwd: root });
+    const r = run(AGENTS[agent].bin, AGENTS[agent].args(prompt), root);
     return r.status ?? 0;
   }
   console.log(`\nNext, tell your AI agent:\n  ${c('1', prompt)}`);
