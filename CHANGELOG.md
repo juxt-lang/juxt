@@ -2,6 +2,11 @@
 
 All notable changes to this project are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses [Semantic Versioning](https://semver.org/).
 
+## [0.4.4] - 2026-10-25
+
+### Changed
+- README: results of the real-project test (Snipe-IT clone).
+
 ## [0.4.3] - 2026-10-25
 
 ### Changed
@@ -73,6 +78,7 @@ First public preview.
 - `juxt-lang` npm CLI (`npx juxt-lang init | lint | ir | digest | facts | hosts`).
 - Language summary (3.4), example programs, eval suite and website.
 
+[0.4.4]: https://github.com/juxt-lang/juxt/releases/tag/v0.4.4
 [0.4.3]: https://github.com/juxt-lang/juxt/releases/tag/v0.4.3
 [0.4.2]: https://github.com/juxt-lang/juxt/releases/tag/v0.4.2
 [0.4.1]: https://github.com/juxt-lang/juxt/releases/tag/v0.4.1

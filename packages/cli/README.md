@@ -45,6 +45,8 @@ In an AI chat instead? Type: `Run npx juxt-lang php2shell --print and follow it`
 
 What runs is [a Juxt program](https://github.com/juxt-lang/juxt/blob/main/examples/php2shell.juxt) with four agents in a pipeline, `scout -> planner -> approval -> patcher -> verifier`: read-only until you approve, then patch, restart and prove. Fixed versions and details: [juxt-lang.github.io/#/php2shell](https://juxt-lang.github.io/#/php2shell).
 
+**Tested on a real project.** We ran it on a clone of the public [Snipe-IT](https://github.com/snipe/snipe-it) repository. The agent found three PHP images (Ubuntu 24.04 with `libapache2-mod-php8.3` from apt, Alpine 3.24 with `php84-apache2`, and a floating `php:8.3-fpm-alpine3.21`), plus compose and CI. After approval it made three small edits: `apt-get upgrade` in the Ubuntu build, `apk add --upgrade` in the Alpine build, and `PHP_VERSION=8.3.36` for the FPM image. With no Docker in the sandbox, it marked every image **unverified** rather than claiming a fix. The test also improved the program: version 0.4.3 inspects PHP installed from distro packages and every build file, and prints the receipt only when every check passes. Changes stayed in our sandbox; Juxt-lang is not affiliated with Snipe-IT.
+
 **Patching many servers, or no in-house team?** The creator of Juxt can help: [email Amit](mailto:amit.nilajkar@gmail.com?subject=PHP2Shell%3A%20help%20patching%20our%20servers) or see the [contact page](https://juxt-lang.github.io/#/contact). If this helped, [star the repo](https://github.com/juxt-lang/juxt).
 
 ## Quick start
