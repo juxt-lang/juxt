@@ -4,5 +4,5 @@ const root = path.join(__dirname, '..', '..', '..');
 const src = path.join(root, 'agent-skills', 'juxt'), dst = path.join(__dirname, '..', 'skill');
 fs.rmSync(dst, { recursive: true, force: true });
 fs.cpSync(src, dst, { recursive: true });
-fs.copyFileSync(path.join(root, 'LICENSE'), path.join(__dirname, '..', 'LICENSE'));
+for (const f of ['LICENSE', 'NOTICE']) fs.copyFileSync(path.join(root, f), path.join(__dirname, '..', f));
 console.log('bundled agent-skills/juxt -> packages/cli/skill');

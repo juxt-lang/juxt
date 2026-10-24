@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://juxt-lang.github.io/juxt/"><img src="https://raw.githubusercontent.com/juxt-lang/juxt/main/assets/banner.png" alt="Juxt-lang: many minds, one intent. The language for directing AI agents." width="100%"></a>
+  <a href="https://juxt-lang.github.io/"><img src="https://raw.githubusercontent.com/juxt-lang/juxt/main/assets/banner.png" alt="Juxt-lang: many minds, one intent. The language for directing AI agents." width="100%"></a>
 </p>
 
 <p align="center">
@@ -11,8 +11,10 @@
   <a href="https://github.com/juxt-lang/juxt/blob/main/LICENSE"><img alt="License: Apache-2.0" src="https://img.shields.io/badge/license-Apache--2.0-F7DF1E"></a>
 </p>
 
+<p align="center"><b>Created by Amit N</b></p>
+
 <p align="center">
-  <a href="https://juxt-lang.github.io/juxt/"><b>Website</b></a> ·
+  <a href="https://juxt-lang.github.io/"><b>Website</b></a> ·
   <a href="https://github.com/juxt-lang/juxt"><b>GitHub</b></a> ·
   <a href="https://github.com/juxt-lang/juxt/blob/main/spec/LANGUAGE.md"><b>Language</b></a> ·
   <a href="https://github.com/juxt-lang/juxt/tree/main/examples"><b>Examples</b></a> ·
@@ -109,6 +111,6 @@ For slash commands and an independent reviewer subagent, Claude Code users can i
 
 ## License
 
-[Apache-2.0](https://github.com/juxt-lang/juxt/blob/main/LICENSE) © 2026 Amit Nilajkar and the Juxt-lang contributors.
+Code: [Apache-2.0](https://github.com/juxt-lang/juxt/blob/main/LICENSE). Keep the bundled `NOTICE` file and its attribution when you redistribute. The Juxt name and jˣ logo are trademarks of Amit Nilajkar and are not licensed for reuse ([trademark policy](https://github.com/juxt-lang/juxt/blob/main/TRADEMARKS.md)).
 
-<p align="center"><sub>jˣ · Many minds. One intent.</sub></p>
+<p align="center"><sub>jˣ · Many minds. One intent. · Created by Amit N</sub></p>

@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://juxt-lang.github.io/juxt/"><img src="assets/banner.png" alt="Juxt-lang: many minds, one intent. The language for directing AI agents." width="100%"></a>
+  <a href="https://juxt-lang.github.io/"><img src="assets/banner.png" alt="Juxt-lang: many minds, one intent. The language for directing AI agents." width="100%"></a>
 </p>
 
 <p align="center">
@@ -10,8 +10,10 @@
   <img alt="Agent Skills" src="https://img.shields.io/badge/Agent%20Skills-SKILL.md-5FD3A4">
 </p>
 
+<p align="center"><b>Created by Amit N</b></p>
+
 <p align="center">
-  <a href="https://juxt-lang.github.io/juxt/"><b>Website</b></a> ·
+  <a href="https://juxt-lang.github.io/"><b>Website</b></a> ·
   <a href="#quick-start"><b>Quick start</b></a> ·
   <a href="spec/LANGUAGE.md"><b>Language</b></a> ·
   <a href="examples/"><b>Examples</b></a> ·
@@ -167,6 +169,8 @@ Read [CONTRIBUTING.md](CONTRIBUTING.md). Language changes go through a short RFC
 
 ## License
 
-Licensed under the [Apache License 2.0](LICENSE). Copyright © 2026 Amit Nilajkar and the Juxt-lang contributors.
+The **code** is licensed under the [Apache License 2.0](LICENSE). Redistributions must keep the [NOTICE](NOTICE) file and its attribution: *Juxt-lang, created by Amit N (Amit Nilajkar)*.
 
-<p align="center"><img src="assets/logo-mark.svg" alt="jˣ" width="40"><br><sub>Many minds. One intent.</sub></p>
+The **Juxt name, jˣ logo and brand** are trademarks and are not licensed for reuse; forks must use their own name and logo ([TRADEMARKS.md](TRADEMARKS.md)). The **website, brand assets and The Juxt Book** are © Amit Nilajkar, all rights reserved ([LICENSE-CONTENT.md](LICENSE-CONTENT.md)).
+
+<p align="center"><img src="assets/logo-mark.svg" alt="jˣ" width="40"><br><sub>Many minds. One intent. · Created by Amit N</sub></p>

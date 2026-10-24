@@ -1,20 +1,53 @@
 {
   "name": "juxt-lang",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Juxt-lang CLI: add Juxt mode to any coding agent, lint .juxt programs, and get git-computed repo digests. Many minds, one intent.",
-  "keywords": ["juxt", "juxt-lang", "ai-agents", "agent-skills", "claude-code", "codex", "cursor", "llm", "spec-driven-development", "cli"],
-  "homepage": "https://juxt-lang.github.io/juxt/",
-  "repository": { "type": "git", "url": "git+https://github.com/juxt-lang/juxt.git", "directory": "packages/cli" },
+  "keywords": [
+    "juxt",
+    "juxt-lang",
+    "ai-agents",
+    "agent-skills",
+    "claude-code",
+    "codex",
+    "cursor",
+    "llm",
+    "spec-driven-development",
+    "cli"
+  ],
+  "homepage": "https://juxt-lang.github.io/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/juxt-lang/juxt.git",
+    "directory": "packages/cli"
+  },
   "bugs": "https://github.com/juxt-lang/juxt/issues",
   "license": "Apache-2.0",
-  "author": "Amit Nilajkar",
+  "author": {
+    "name": "Amit Nilajkar",
+    "url": "https://github.com/juxt-lang"
+  },
   "type": "commonjs",
-  "bin": { "juxt": "bin/juxt.js", "juxt-lang": "bin/juxt.js" },
-  "files": ["bin", "lib", "skill", "README.md", "LICENSE"],
-  "engines": { "node": ">=18" },
+  "bin": {
+    "juxt": "bin/juxt.js",
+    "juxt-lang": "bin/juxt.js"
+  },
+  "files": [
+    "bin",
+    "lib",
+    "skill",
+    "README.md",
+    "LICENSE",
+    "NOTICE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "prepack": "node scripts/bundle-skill.js",
     "test": "node --test test/*.test.js"
   },
-  "publishConfig": { "access": "public", "provenance": true }
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  }
 }
