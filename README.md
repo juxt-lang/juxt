@@ -23,6 +23,11 @@
 
 ---
 
+<p align="center">
+  <a href="https://juxt-lang.github.io/#/home/launch"><img src="assets/juxt-highlight.gif" alt="Launch film: six agents in tangled harnesses, then one 'use juxt' brings them into order." width="100%"></a>
+</p>
+<p align="center"><a href="https://juxt-lang.github.io/#/home/launch"><b>▶ Watch the 48-second launch film</b></a> · hand-drawn, with a score made in code</p>
+
 **Juxt-lang is a language for directing AI agents.** You put many models side by side, give them one intent, and get the full strength of each, without the guessing.
 
 You never have to learn it. Add two words to a normal request and your coding agent compiles it into a short, reviewable program before it writes any code. The program holds the objective, the rules, the questions it would otherwise guess, and the checks that prove the work is done.

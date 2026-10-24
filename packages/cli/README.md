@@ -25,6 +25,11 @@
 
 **Juxt-lang is the language for directing AI agents.** This package is its command-line tool. In one command it gives any coding agent *Juxt mode*: say `use juxt` and your request is compiled into a short, reviewable program with rules, open questions and the checks that prove the work is done, **before any code is written**.
 
+<p align="center">
+  <a href="https://juxt-lang.github.io/#/home/launch"><img src="https://raw.githubusercontent.com/juxt-lang/juxt/main/assets/juxt-highlight.gif" alt="Launch film: six agents in tangled harnesses, then one 'use juxt' brings them into order." width="100%"></a>
+</p>
+<p align="center"><a href="https://juxt-lang.github.io/#/home/launch"><b>▶ Watch the 48-second launch film</b></a></p>
+
 ## Security update: fix PHP2Shell in one command
 
 PHP2Shell (CVE-2026-109618, CVE-2026-109619) lets attackers run code on PHP web servers without logging in, and it is being exploited now. Updating PHP is the only fix. In your project folder or on the server, run:
