@@ -109,6 +109,18 @@ For slash commands and an independent reviewer subagent, Claude Code users can i
 - **No network calls.** `digest`, `facts` and `hosts` read git and your files locally. Nothing is sent anywhere; model calls happen only in your agent, under its own settings.
 - **Signed builds.** Releases are published from GitHub Actions with npm provenance, so you can verify each version was built from this repository.
 
+## Contact
+
+Created by **Amit N** (Amit Nilajkar).
+
+| For | Write to |
+|---|---|
+| Partnerships, enterprise pilots, investment, licensing, press, the book | [amit.nilajkar@gmail.com](mailto:amit.nilajkar@gmail.com?subject=Juxt-lang%3A%20Partnership&body=Hi%20Amit%2C%0A%0AI%27m%20%5Bname%5D%2C%20%5Brole%5D%20at%20%5Bcompany%5D.%20We%27d%20like%20to%20talk%20about%20Juxt-lang.%0A%0AThanks%2C%0A) |
+| Bugs, support questions and automated mail | [martian.coders.x@gmail.com](mailto:martian.coders.x@gmail.com?subject=Juxt-lang%3A%20Support%20question&body=Hi%2C%0A%0AWhat%20I%20ran%3A%0AWhat%20I%20expected%3A%0AWhat%20happened%3A%0Ajuxt-lang%20version%3A%0A%0AThanks%2C%0A) · or [open an issue](https://github.com/juxt-lang/juxt/issues) |
+| Security issues | [Report privately on GitHub](https://github.com/juxt-lang/juxt/security/advisories/new) |
+
+Or use the [contact page](https://juxt-lang.github.io/#/contact), which prefills the subject and message for you.
+
 ## License
 
 Code: [Apache-2.0](https://github.com/juxt-lang/juxt/blob/main/LICENSE). Keep the bundled `NOTICE` file and its attribution when you redistribute. The Juxt name and jˣ logo are trademarks of Amit Nilajkar and are not licensed for reuse ([trademark policy](https://github.com/juxt-lang/juxt/blob/main/TRADEMARKS.md)).

@@ -1,6 +1,6 @@
 {
   "name": "juxt-lang",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Juxt-lang CLI: add Juxt mode to any coding agent, lint .juxt programs, and get git-computed repo digests. Many minds, one intent.",
   "keywords": [
     "juxt",
@@ -20,11 +20,15 @@
     "url": "git+https://github.com/juxt-lang/juxt.git",
     "directory": "packages/cli"
   },
-  "bugs": "https://github.com/juxt-lang/juxt/issues",
+  "bugs": {
+    "url": "https://github.com/juxt-lang/juxt/issues",
+    "email": "martian.coders.x@gmail.com"
+  },
   "license": "Apache-2.0",
   "author": {
     "name": "Amit Nilajkar",
-    "url": "https://github.com/juxt-lang"
+    "email": "amit.nilajkar@gmail.com",
+    "url": "https://juxt-lang.github.io/#/contact"
   },
   "type": "commonjs",
   "bin": {
@@ -49,5 +53,11 @@
   "publishConfig": {
     "access": "public",
     "provenance": true
-  }
+  },
+  "maintainers": [
+    {
+      "name": "juxt-lang",
+      "email": "martian.coders.x@gmail.com"
+    }
+  ]
 }
