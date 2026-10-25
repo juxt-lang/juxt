@@ -1,0 +1,18 @@
+# expect: ok
+# ir: topology.orchestrator = "planner"
+# ir: topology.edges.0.from = "planner"
+# ir: topology.edges.0.to = "builder"
+# ir: topology.edges.0.kind = "handoff"
+# ir: topology.edges.0.fields = ["plan","contract"]
+# ir: topology.edges.1.kind = "loop"
+# ir: topology.edges.1.when = "verify"
+# ir: topology.edges.2.kind = "event"
+# ir: topology.edges.2.when = "limits_changed"
+@juxt 0.7
+objective: x
+topology: orchestrator(planner)
+  planner  => builder   { plan, contract }
+  reviewer -> builder until verify
+  builder  ~> billing on limits_changed { tier_table }
+verify:
+  test "t"

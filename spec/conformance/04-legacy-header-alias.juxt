@@ -1,0 +1,6 @@
+# expect: warning pre-0.7 header
+# ir: juxt = "0.6"
+@juxt 3.4
+objective: x
+verify:
+  test "t"

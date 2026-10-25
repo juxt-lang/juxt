@@ -1,4 +1,4 @@
-@juxt 3.4
+@juxt 0.7
 # Roadmap feature (juxt watch): keep the stack current in waves.
 stack:
   node 22, express 4.19, redis 7.4

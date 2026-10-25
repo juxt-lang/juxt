@@ -1,4 +1,4 @@
-@juxt 3.4
+@juxt 0.7
 # Rules /juxt:status uses to set Red, Amber or Green. Numbers are never generated.
 status:
   rag: red   if revert in main or incident(sev1) open

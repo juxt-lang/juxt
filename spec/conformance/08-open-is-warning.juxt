@@ -1,0 +1,9 @@
+# expect: warning unresolved OPEN question
+# ir: open.0.question = "enterprise keys get a higher limit?"
+@juxt 0.7
+objective: x
+constraints:
+  MUST NOT touch /api/internal
+  OPEN enterprise keys get a higher limit?
+verify:
+  test "t"

@@ -1,0 +1,4 @@
+# expect: error program must start with "@juxt <version>"
+objective: x
+verify:
+  test "t"

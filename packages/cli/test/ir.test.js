@@ -31,7 +31,7 @@ test('agents, remote agents, handoffs and limits are typed', () => {
 });
 
 test('open questions are separated from constraints', () => {
-  const ir = toTypedIR(lint('@juxt 3.4\nobjective: x\nconstraints:\n  MUST a\n  OPEN b?\nverify:\n  test "t"\n').prog);
+  const ir = toTypedIR(lint('@juxt 0.7\nobjective: x\nconstraints:\n  MUST a\n  OPEN b?\nverify:\n  test "t"\n').prog);
   assert.strictEqual(ir.constraints.length, 1);
   assert.strictEqual(ir.open.length, 1);
   assert.strictEqual(ir.open[0].question, 'b?');

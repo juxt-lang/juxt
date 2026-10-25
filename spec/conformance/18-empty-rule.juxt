@@ -1,0 +1,7 @@
+# expect: error MUST has no rule text
+@juxt 0.7
+objective: x
+constraints:
+  MUST
+verify:
+  test "t"

@@ -21,4 +21,4 @@ Plain text, one block per line, content indented. Any agent can read it without 
 
 Rules: every program has an `objective` and at least one `verify`; constraints outrank the objective; every handoff names its payload; policy is enforced by the harness, not only by the prompt.
 
-Full specification: The Juxt Book.
+Normative grammar: spec/GRAMMAR.md (https://github.com/juxt-lang/juxt/blob/main/spec/GRAMMAR.md).

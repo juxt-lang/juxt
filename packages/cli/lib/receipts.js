@@ -41,7 +41,6 @@ function summarise(root) {
   s.cacheHitRate = rows.length ? s.cached / rows.length : 0;
   // deterministic + cached requests used no model tokens at all
   s.tokensSavedByTiers = rows.filter(r => (r.tier ?? 3) <= 1).reduce((k, r) => k + (r.wouldHaveTokens || 0), 0);
-  s.contextSaved = s.baselineTokens && s.compiledTokens ? s.baselineTokens - s.compiledTokens : 0;
   return s;
 }
 

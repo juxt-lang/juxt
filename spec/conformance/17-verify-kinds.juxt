@@ -1,0 +1,9 @@
+# expect: ok
+# ir: verify = [{"kind":"test","text":"101st request -> 429"},{"kind":"bench","text":"p99 < 5ms"},{"kind":"review","text":"against every MUST"},{"kind":"check","text":"manual smoke test"}]
+@juxt 0.7
+objective: x
+verify:
+  test "101st request -> 429"
+  bench p99 < 5ms
+  review against every MUST
+  manual smoke test

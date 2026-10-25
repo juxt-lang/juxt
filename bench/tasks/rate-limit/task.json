@@ -1,0 +1,6 @@
+{
+  "id": "rate-limit",
+  "repo": "fixture/shop-api",
+  "prompt": "Rate-limit the public API to 100 requests per minute per API key (the x-api-key header).",
+  "rules": "docs/RULES.md"
+}

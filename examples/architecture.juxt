@@ -1,4 +1,4 @@
-@juxt 3.4
+@juxt 0.7
 # Used by /juxt:digest and /juxt:status to group changes by bounded context.
 architecture:
   context orders   paths: src/orders, src/api/orders

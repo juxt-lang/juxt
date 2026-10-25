@@ -1,0 +1,6 @@
+{
+  "id": "cancel-order",
+  "repo": "fixture/shop-api",
+  "prompt": "Add an endpoint to cancel an order: POST /orders/:id/cancel. Cancelling should refund the customer.",
+  "rules": "docs/RULES.md"
+}

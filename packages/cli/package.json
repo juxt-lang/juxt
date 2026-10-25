@@ -1,7 +1,7 @@
 {
   "name": "juxt-lang",
-  "version": "0.6.0",
-  "description": "Juxt-lang CLI: typed IR + JSON Schema for .juxt programs, drift check against your repo, a token-saving tiered router (cache -> compiled -> local model -> frontier) with measured receipts, plus Juxt mode for any coding agent and the php2shell fix.",
+  "version": "0.7.0",
+  "description": "Juxt-lang CLI: a small language for directing AI agents, with a formal grammar, typed IR and JSON Schema, a drift check for CI, a tiered router (cache, compiled, local model, frontier) with receipts, and Juxt mode for any coding agent.",
   "keywords": [
     "agent-skills",
     "ai-agents",

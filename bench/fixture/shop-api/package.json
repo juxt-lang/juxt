@@ -1,0 +1,8 @@
+{
+  "name": "shop-api",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Reference app for the Juxt benchmark: a small orders/payments API with house rules in docs/RULES.md.",
+  "scripts": { "test": "node --test" },
+  "engines": { "node": ">=18" }
+}

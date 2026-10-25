@@ -1,0 +1,7 @@
+# expect: error constraint must start with MUST, MUST NOT, SHOULD or OPEN
+@juxt 0.7
+objective: x
+constraints:
+  MAYBE cache it
+verify:
+  test "t"

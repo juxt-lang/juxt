@@ -25,7 +25,7 @@ fi
 dirs=$(ls -d */ 2>/dev/null | grep -vE '^(node_modules|dist|build|target|vendor|\.)' | tr -d '/' | head -10 | tr '\n' ',' | sed 's/,$//; s/,/, /g')
 
 cat > "$out" <<EOF
-@juxt 3.4
+@juxt 0.7
 # Shared context for every agent session in this repo. Edit freely.
 
 context:

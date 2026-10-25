@@ -1,0 +1,6 @@
+{
+  "id": "reserve-stock",
+  "repo": "fixture/shop-api",
+  "prompt": "When an order is created, reserve stock for each item in it.",
+  "rules": "docs/RULES.md"
+}

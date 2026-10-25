@@ -1,5 +1,5 @@
 'use strict';
-// Typed IR for Juxt 3.4: turns a parsed program into a strict, machine-checkable
+// Typed IR for Juxt (spec/GRAMMAR.md): turns a parsed program into a strict, machine-checkable
 // shape (contracts, typed handoffs, agents, topology, limits) plus a JSON Schema.
 // Built on lib/lint.js parse(); kept separate so the old toIR() stays stable.
 const { parse } = require('./lint');
@@ -38,14 +38,54 @@ function num(s) {
   return v;
 }
 
-// contract "in: order id, authenticated user" -> {in:[...], out:[...], invariant:[...], on_error:[...]}
-// each entry is parsed into {name,type?} when written "name: type" or "name (type)".
+// Split on a separator only at the top level (not inside {}, (), [] or quotes).
+function splitTop(s, sep = ',') {
+  const out = []; let depth = 0, q = null, buf = '';
+  for (const ch of String(s)) {
+    if (q) { buf += ch; if (ch === q) q = null; continue; }
+    if (ch === '"' || ch === "'") { q = ch; buf += ch; continue; }
+    if ('{(['.includes(ch)) depth++;
+    else if ('})]'.includes(ch)) depth = Math.max(0, depth - 1);
+    if (ch === sep && depth === 0) { out.push(buf); buf = ''; continue; }
+    buf += ch;
+  }
+  out.push(buf);
+  return out.map(x => x.trim()).filter(Boolean);
+}
+// "{ retry_after: duration, code }" -> [{name:'retry_after', type:'duration'}, {name:'code', type:null}]
+function recordFields(body) {
+  return splitTop(body).map(f => {
+    const i = topColon(f);
+    return i < 0 ? { name: f.trim(), type: null } : { name: f.slice(0, i).trim(), type: f.slice(i + 1).trim() || null };
+  });
+}
+function topColon(s) {
+  let depth = 0;
+  for (let i = 0; i < s.length; i++) {
+    const ch = s[i];
+    if ('{(['.includes(ch)) depth++; else if ('})]'.includes(ch)) depth--;
+    else if (ch === ':' && depth === 0 && s.slice(i, i + 3) !== '://') return i;
+  }
+  return -1;
+}
+
+// Contract entry grammar (spec/GRAMMAR.md):
+//   entry  = name [":" type] | name "(" type ")" | text record text
+//   record = "{" field {"," field} "}"     field = name [":" type]
+// Examples: "req: CancelRequest", "api_key", "user (User)",
+//           "429 { retry_after: duration } when over limit"
 function typedEntry(raw) {
-  let m = raw.match(/^([^:]+):\s*(.+)$/);
+  const t = raw.trim();
+  const rec = t.match(/^(.*?)\{([^{}]*)\}(.*)$/);
+  if (rec) {
+    const name = (rec[1] + ' ' + rec[3]).replace(/\s+/g, ' ').trim() || 'value';
+    return { name, type: '{ ' + rec[2].trim() + ' }', fields: recordFields(rec[2]) };
+  }
+  const i = topColon(t);
+  if (i > 0) return { name: t.slice(0, i).trim(), type: t.slice(i + 1).trim() || null };
+  const m = t.match(/^(.+?)\s*\(([^)]+)\)\s*$/);
   if (m) return { name: m[1].trim(), type: m[2].trim() };
-  m = raw.match(/^(.+?)\s*\(([^)]+)\)\s*$/);
-  if (m) return { name: m[1].trim(), type: m[2].trim() };
-  return { name: raw.trim(), type: null };
+  return { name: t, type: null };
 }
 
 function agentFrom(b) {
@@ -132,7 +172,7 @@ function toTypedIR(prog) {
     const m = it.text.match(/^(in|out|invariant|on_error)\s*:\s*(.*)$/i);
     if (!m) { ir.contract.invariant.push({ name: it.text.trim(), type: null }); continue; }
     const key = m[1].toLowerCase();
-    for (const part of (key === 'on_error' ? [m[2]] : list(m[2]))) {
+    for (const part of (key === 'on_error' ? [m[2]] : splitTop(m[2]))) {
       if (part) ir.contract[key].push(typedEntry(part));
     }
   }
@@ -178,4 +218,4 @@ function toTypedIR(prog) {
   return ir;
 }
 
-module.exports = { toTypedIR };
+module.exports = { toTypedIR, typedEntry, splitTop };

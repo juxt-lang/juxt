@@ -1,0 +1,7 @@
+# expect: ok
+# a comment line before the header is allowed
+
+@juxt 0.7
+objective: x   # inline comment after whitespace
+verify:
+  test "a#b is not a comment"

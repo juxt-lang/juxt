@@ -1,0 +1,11 @@
+# expect: ok
+# ir: constraints.0.level = "MUST NOT"
+# ir: constraints.0.rule = "change the public schema"
+# ir: constraints.1.level = "SHOULD"
+@juxt 0.7
+objective: x
+constraints:
+  MUST NOT change the public schema
+  SHOULD   reuse payments.refund()
+verify:
+  test "t"

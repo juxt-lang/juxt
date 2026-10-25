@@ -1,0 +1,14 @@
+# expect: ok
+# ir: agents.0.name = "builder"
+# ir: agents.0.kind = "local"
+# ir: agents.0.model = "fast"
+# ir: agents.0.tools = ["mcp://github","mcp://redis(read)"]
+# ir: agents.1.kind = "remote"
+# ir: agents.1.address = "a2a://billing.acme.dev"
+# ir: agents.1.signed = true
+@juxt 0.7
+objective: x
+agent builder:  model: fast, tools: mcp://github, mcp://redis(read)
+remote agent billing:  a2a://billing.acme.dev, signed
+verify:
+  test "t"

@@ -19,7 +19,7 @@ Skip this and just do the task when it is a one-line edit, a rename or a quick q
 1. Read `juxt/context.juxt` if it exists, list `juxt/*.juxt`, and run `bash scripts/hosts.sh --brief` (paths are relative to this skill's folder) to see which skills, commands, subagents and MCP servers the host already provides. Also consider the built-in commands and skills you can see in your own tool list.
 2. Compile the request into: objective, constraints (MUST, MUST NOT, SHOULD, including inherited rules), contract, pattern (only if one clearly applies), verify (runnable checks), OPEN (decisions the request did not make). See `reference/compile.md`.
 3. Show an "Understood as" block of at most 8 lines, then ask the OPEN questions (at most 3). Do not write code before the user answers.
-4. Save the program to `juxt/<short-name>.juxt`, starting with `@juxt 3.4`.
+4. Save the program to `juxt/<short-name>.juxt`, starting with `@juxt 0.7`.
 5. For each step (plan, implement, test, review, commit), prefer the host's native capability; write `native:` or `generic:` before each step.
 6. Build within the rules, run the verify checks for real, then have a reviewer that has not seen your reasoning check the change against every MUST. Fix and re-verify, at most 3 loops.
 7. Reply with: changes, checks and results, a decision log of at most 5 lines, risks, and the program path. Then run `bash scripts/receipt.sh add use T3 0 open=<n> checks=<n> reused=<yes|no>`.

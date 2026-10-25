@@ -1,0 +1,6 @@
+# expect: warning unknown block "x-yourco-review"
+@juxt 0.7
+x-yourco-review: on
+objective: x
+verify:
+  test "t"

@@ -1,7 +1,8 @@
 'use strict';
 // Context compiler: build the smallest prompt that answers a question about a
 // program — the program plus only the contract/handoff types it touches and the
-// repo definitions of those types — instead of attaching the whole repo.
+// repo definitions of those types. (baselineTokensEst is kept for API compatibility
+// only; the CLI no longer reports it as a saving, see bench/ for real comparisons.)
 const fs = require('fs');
 const path = require('path');
 const { estTokens } = require('./model');

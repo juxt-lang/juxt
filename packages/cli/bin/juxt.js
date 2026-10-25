@@ -35,7 +35,7 @@ Usage
 
   npx juxt-lang ask "<q>" [--file f] Answer from the program: cache -> compiled -> local model -> frontier
       options: --no-model  --url <endpoint>  --model <name>  --show
-  npx juxt-lang context "<q>" [-f f] Show the compiled context and how much less it is than the whole repo
+  npx juxt-lang context "<q>" [-f f] Show the briefing Juxt sends for a question: program + the types it touches
   npx juxt-lang receipts             Measured token receipts: tiers, cache rate, savings
   npx juxt-lang eval [--with-model]  Measure no-model answer rate and context reduction on this repo
   npx juxt-lang models               Check the configured local model endpoint (JUXT_MODEL_URL/JUXT_MODEL)
@@ -309,7 +309,7 @@ async function askCmd(args) {
   const TN = { 0: 'recall · cache', 1: 'compiled · no model', 2: 'small local model', 3: 'frontier' };
   if (r.escalate) {
     console.log(`${c('33', 'escalate')} no local model answered (tier 3).${r.error ? '  ' + r.error : ''}`);
-    console.log(`\nCompiled context ready (${r.compiledTokens} tok vs ~${r.baselineTokens || '?'} for the whole repo).`);
+    console.log(`\nBriefing ready (~${r.compiledTokens} tok, est).`);
     console.log(`Start a local model (ollama run <model>) or paste the compiled prompt into a frontier model. Use --show to print it.`);
     if (args.includes('--show')) console.log('\n--- compiled prompt ---\n' + r.prompt);
     return 3;
@@ -332,14 +332,8 @@ function contextCmd(args) {
   const idx = indexRepo(root);
   const ctx = compileContext(program, toTypedIR(lint(program).prog), q, idx);
   if (args.includes('--prompt')) { process.stdout.write(ctx.prompt); return 0; }
-  const base = ctx.baselineTokensEst;
-  console.log(`compiled context:  ${c('1', ctx.tokensEst + ' tokens')} (est)`);
-  if (base) {
-    const saved = base - ctx.tokensEst, pct = base ? Math.round(saved / base * 100) : 0;
-    console.log(`whole repo (naive): ~${base} tokens (est, ${idx.fileCount} files)`);
-    console.log(`${c('32', 'saved')} ~${saved} tokens / request — ${c('1', pct + '%')} less context`);
-  }
-  console.log(`types included:     ${ctx.typesIncluded.join(', ') || '(none needed)'}`);
+  console.log(`briefing:        ${c('1', ctx.tokensEst + ' tokens')} (est, chars/4)`);
+  console.log(`types included:  ${ctx.typesIncluded.join(', ') || '(none needed)'}`);
   console.log(`\nSee the prompt with --prompt. Token counts are chars/4 estimates.`);
   return 0;
 }
@@ -355,8 +349,8 @@ function receiptsCmd(args) {
   console.log(`\n  model calls:     ${s.modelCalls}`);
   console.log(`  cache hit rate:  ${Math.round(s.cacheHitRate * 100)}%`);
   console.log(`  model tokens:    ${s.tokensIn} in · ${s.tokensOut} out${s.est ? ' (some est)' : ''}`);
-  if (s.tokensSavedByTiers) console.log(`  ${c('32', 'saved')} ${s.tokensSavedByTiers} model tokens via cache + deterministic answers`);
-  if (s.contextSaved) console.log(`  ${c('32', 'saved')} ~${s.contextSaved} tokens by compiling context instead of whole-repo`);
+  const avoided = (s.byTier[0] || 0) + (s.byTier[1] || 0);
+  if (avoided) console.log(`  model calls avoided: ${avoided} (answered from cache or the program itself)`);
   console.log(`\n  receipts: ${path.relative(process.cwd(), receipts.file(root))}`);
   return 0;
 }

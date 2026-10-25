@@ -2,25 +2,70 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://juxt-lang.github.io/schema/juxt-ir.schema.json",
   "title": "Juxt typed IR",
-  "description": "The machine-checkable intermediate representation of a Juxt 3.4 program: objective, rules, typed contract, agents, typed handoffs, limits and verify checks.",
+  "description": "The machine-checkable intermediate representation of a Juxt program (spec/GRAMMAR.md): objective, rules, typed contract, agents, typed handoffs, limits and verify checks.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["juxt", "kind", "constraints", "open", "contract", "agents", "topology", "verify"],
+  "required": [
+    "juxt",
+    "kind",
+    "constraints",
+    "open",
+    "contract",
+    "agents",
+    "topology",
+    "verify"
+  ],
   "properties": {
-    "juxt": { "type": ["string", "null"], "description": "Language version from the @juxt header." },
-    "kind": { "enum": ["task", "config"] },
-    "objective": { "type": ["string", "null"] },
-    "context": { "type": "object", "additionalProperties": { "type": "string" } },
+    "juxt": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Language version from the @juxt header."
+    },
+    "kind": {
+      "enum": [
+        "task",
+        "config"
+      ]
+    },
+    "objective": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "context": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
     "constraints": {
       "type": "array",
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["level", "rule"],
+        "required": [
+          "level",
+          "rule"
+        ],
         "properties": {
-          "level": { "enum": ["MUST", "MUST NOT", "SHOULD", "SHOULD NOT", null] },
-          "rule": { "type": "string" },
-          "line": { "type": "integer" }
+          "level": {
+            "enum": [
+              "MUST",
+              "MUST NOT",
+              "SHOULD",
+              "SHOULD NOT",
+              null
+            ]
+          },
+          "rule": {
+            "type": "string"
+          },
+          "line": {
+            "type": "integer"
+          }
         }
       }
     },
@@ -29,73 +74,201 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["question"],
-        "properties": { "question": { "type": "string" }, "line": { "type": "integer" } }
+        "required": [
+          "question"
+        ],
+        "properties": {
+          "question": {
+            "type": "string"
+          },
+          "line": {
+            "type": "integer"
+          }
+        }
       }
     },
     "contract": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["in", "out", "invariant", "on_error"],
+      "required": [
+        "in",
+        "out",
+        "invariant",
+        "on_error"
+      ],
       "properties": {
-        "in": { "$ref": "#/$defs/typedList" },
-        "out": { "$ref": "#/$defs/typedList" },
-        "invariant": { "$ref": "#/$defs/typedList" },
-        "on_error": { "$ref": "#/$defs/typedList" }
+        "in": {
+          "$ref": "#/$defs/typedList"
+        },
+        "out": {
+          "$ref": "#/$defs/typedList"
+        },
+        "invariant": {
+          "$ref": "#/$defs/typedList"
+        },
+        "on_error": {
+          "$ref": "#/$defs/typedList"
+        }
       }
     },
-    "pattern": { "type": "array", "items": { "type": "string" } },
+    "pattern": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
     "agents": {
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["name", "kind"],
+        "required": [
+          "name",
+          "kind"
+        ],
         "properties": {
-          "name": { "type": "string" },
-          "kind": { "enum": ["local", "remote"] },
-          "model": { "type": ["string", "null"] },
-          "role": { "type": ["string", "null"] },
-          "tools": { "type": "array", "items": { "type": "string" } },
-          "context": { "type": ["string", "null"] },
-          "address": { "type": ["string", "null"] },
-          "signed": { "type": "boolean" },
-          "scope": { "type": ["string", "null"] },
-          "line": { "type": "integer" }
+          "name": {
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "local",
+              "remote"
+            ]
+          },
+          "model": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "role": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "tools": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "context": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "address": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "signed": {
+            "type": "boolean"
+          },
+          "scope": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "line": {
+            "type": "integer"
+          }
         }
       }
     },
     "topology": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["orchestrator", "edges"],
+      "required": [
+        "orchestrator",
+        "edges"
+      ],
       "properties": {
-        "orchestrator": { "type": ["string", "null"] },
+        "orchestrator": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
         "edges": {
           "type": "array",
           "items": {
             "type": "object",
             "properties": {
-              "from": { "type": "string" },
-              "to": { "type": "string" },
-              "kind": { "enum": ["handoff", "loop", "event"] },
-              "when": { "type": ["string", "null"] },
-              "fields": { "type": "array", "items": { "type": "string" } },
-              "raw": { "type": "string" },
-              "line": { "type": "integer" }
+              "from": {
+                "type": "string"
+              },
+              "to": {
+                "type": "string"
+              },
+              "kind": {
+                "enum": [
+                  "handoff",
+                  "loop",
+                  "event"
+                ]
+              },
+              "when": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "fields": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "raw": {
+                "type": "string"
+              },
+              "line": {
+                "type": "integer"
+              }
             }
           }
         }
       }
     },
-    "policy": { "type": "array", "items": { "type": "string" } },
+    "policy": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
     "limits": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "tokens": { "type": ["number", "null"] },
-        "iterations": { "type": ["number", "null"] },
-        "cost_usd": { "type": ["number", "null"] },
-        "time": { "type": ["string", "null"] }
+        "tokens": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "iterations": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "cost_usd": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "time": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
       }
     },
     "verify": {
@@ -103,10 +276,22 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["kind", "text"],
+        "required": [
+          "kind",
+          "text"
+        ],
         "properties": {
-          "kind": { "enum": ["test", "bench", "review", "check"] },
-          "text": { "type": "string" }
+          "kind": {
+            "enum": [
+              "test",
+              "bench",
+              "review",
+              "check"
+            ]
+          },
+          "text": {
+            "type": "string"
+          }
         }
       }
     },
@@ -115,13 +300,35 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["tier", "name"],
-        "properties": { "tier": { "type": "integer" }, "name": { "type": "string" } }
+        "required": [
+          "tier",
+          "name"
+        ],
+        "properties": {
+          "tier": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
       }
     },
-    "returns": { "type": "array", "items": { "type": "string" } },
-    "receipts": { "type": "boolean" },
-    "extends": { "type": ["string", "null"] }
+    "returns": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "receipts": {
+      "type": "boolean"
+    },
+    "extends": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
   },
   "$defs": {
     "typedList": {
@@ -129,10 +336,42 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["name", "type"],
+        "required": [
+          "name",
+          "type"
+        ],
         "properties": {
-          "name": { "type": "string" },
-          "type": { "type": ["string", "null"] }
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "fields": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "name",
+                "type"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              }
+            }
+          }
         }
       }
     }

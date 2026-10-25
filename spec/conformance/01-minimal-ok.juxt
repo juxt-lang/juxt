@@ -1,0 +1,5 @@
+# expect: ok
+@juxt 0.7
+objective: add a health endpoint
+verify:
+  test "GET /health -> 200"

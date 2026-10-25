@@ -48,7 +48,7 @@ Show the user an "Understood as" block of at most 8 lines, then ask the OPEN que
 
 ## Step 3 · Save the program
 
-Write the final program to `juxt/<short-name>.juxt`, starting with `@juxt 3.4`, with the answered questions folded into constraints. Keep it under 40 lines.
+Write the final program to `juxt/<short-name>.juxt`, starting with `@juxt 0.7`, with the answered questions folded into constraints. Keep it under 40 lines.
 
 ## Step 4 · Map steps to the host's native capabilities
 

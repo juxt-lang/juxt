@@ -1,0 +1,7 @@
+# expect: ok
+# ir: limits = {"tokens":200000,"iterations":4,"cost_usd":3,"time":"20m"}
+@juxt 0.7
+objective: x
+limits:  tokens 200k, iterations 4, cost $3, time 20m
+verify:
+  test "t"

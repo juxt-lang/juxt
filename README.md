@@ -5,7 +5,7 @@
 <p align="center">
   <a href="https://github.com/juxt-lang/juxt/actions/workflows/validate.yml"><img alt="Validate" src="https://github.com/juxt-lang/juxt/actions/workflows/validate.yml/badge.svg"></a>
   <a href="LICENSE"><img alt="License: Apache-2.0" src="https://img.shields.io/badge/license-Apache--2.0-F7DF1E"></a>
-  <img alt="Version 0.1.0" src="https://img.shields.io/badge/version-0.1.0-111111">
+  <a href="https://www.npmjs.com/package/juxt-lang"><img alt="npm version" src="https://img.shields.io/npm/v/juxt-lang?color=111111&label=npm"></a>
   <img alt="Claude Code plugin" src="https://img.shields.io/badge/Claude%20Code-plugin-D97757">
   <img alt="Agent Skills" src="https://img.shields.io/badge/Agent%20Skills-SKILL.md-5FD3A4">
 </p>
@@ -42,30 +42,6 @@ Understood as
   OPEN        cancel after shipping?  partial refunds?
 ```
 
-## Security update: fix PHP2Shell in one command
-
-PHP2Shell (CVE-2026-109618, CVE-2026-109619) lets attackers run code on PHP web servers without logging in, and it is being exploited now. Updating PHP is the only fix. In your project folder or on the server, run:
-
-```sh
-npx juxt-lang php2shell
-```
-
-It finds your AI agent (Claude Code, Codex, Gemini CLI or Cursor), sets up Juxt and starts the fix. The agent shows what it found and asks before changing anything.
-
-| Option | Use it to |
-|---|---|
-| `--agent codex` | Pick the agent: `claude`, `codex`, `gemini` or `cursor` |
-| `--print` | Print the Juxt program to paste into any AI chat |
-| `--no-launch` | Only write `juxt/php2shell.juxt` |
-
-In an AI chat instead? Type: `Run npx juxt-lang php2shell --print and follow it`
-
-What runs is [a Juxt program](https://github.com/juxt-lang/juxt/blob/main/examples/php2shell.juxt) with four agents in a pipeline, `scout -> planner -> approval -> patcher -> verifier`: read-only until you approve, then patch, restart and prove. Fixed versions and details: [juxt-lang.github.io/#/php2shell](https://juxt-lang.github.io/#/php2shell).
-
-**Tested on a real project.** We ran it on a clone of the public [Snipe-IT](https://github.com/snipe/snipe-it) repository. The agent found three PHP images (Ubuntu 24.04 with `libapache2-mod-php8.3` from apt, Alpine 3.24 with `php84-apache2`, and a floating `php:8.3-fpm-alpine3.21`), plus compose and CI. After approval it made three small edits: `apt-get upgrade` in the Ubuntu build, `apk add --upgrade` in the Alpine build, and `PHP_VERSION=8.3.36` for the FPM image. With no Docker in the sandbox, it marked every image **unverified** rather than claiming a fix. The test also improved the program: version 0.4.3 inspects PHP installed from distro packages and every build file, and prints the receipt only when every check passes. Changes stayed in our sandbox; Juxt-lang is not affiliated with Snipe-IT.
-
-**Patching many servers, or no in-house team?** The creator of Juxt can help: [email Amit](mailto:amit.nilajkar@gmail.com?subject=PHP2Shell%3A%20help%20patching%20our%20servers) or see the [contact page](https://juxt-lang.github.io/#/contact). If this helped, [star the repo](https://github.com/juxt-lang/juxt).
-
 ## Why Juxt
 
 
@@ -77,6 +53,20 @@ What runs is [a Juxt program](https://github.com/juxt-lang/juxt/blob/main/exampl
 | Each tool (Claude Code, Codex, CI) needs its own prompting | One program, compiled to each harness's native skills, commands and subagents |
 | The same status questions are re-asked of a model every day | Digests and status updates come from git, with citations; repeat asks are served from cache |
 | Nobody can audit why an agent did what it did | Programs are plain-text `.juxt` files in your repo, versioned and reviewable like code |
+
+## How Juxt compares
+
+| | Juxt | [GitHub Spec Kit](https://github.github.com/spec-kit/) | [Kiro](https://kiro.dev/docs/specs/feature-specs/requirements-first/) | AGENTS.md |
+|---|---|---|---|---|
+| Format | Formal [grammar](spec/GRAMMAR.md), typed IR, JSON Schema | Markdown per phase | Markdown: EARS requirements, design, tasks | Free-form Markdown |
+| Checks | `lint`, `validate`, drift `check` in CI | Checklists; CI gates via extensions | Manual review | None defined |
+| Maturity | **Early (0.7)**, few users | Widely adopted | AWS product | De facto standard |
+
+The others are ahead on maturity, integrations and ecosystem. Juxt's difference is a program you can check mechanically and a build that fails on drift. They work together: AGENTS.md describes the repo, a `.juxt` program states one change and how to prove it. Full comparison: [juxt-lang.github.io/#/home/compare](https://juxt-lang.github.io/#/home/compare).
+
+## Does it help? Measure it
+
+[`bench/`](bench/) runs the same agent on the same tasks with and without Juxt, scores them with hidden acceptance tests, and records the agent's own token usage and cost. No results are claimed yet; they will be published unedited, losses included.
 
 ## How it works
 
@@ -93,7 +83,7 @@ flowchart LR
 A compiled program is short and readable ([examples/cancel-order.juxt](examples/cancel-order.juxt)):
 
 ```text
-@juxt 3.4
+@juxt 0.7
 objective:   POST /orders/{id}/cancel cancels the order and refunds the original card
 constraints:
   MUST     idempotent writes (payments domain rule)
@@ -143,6 +133,28 @@ npx juxt-lang digest 1d         # what changed, by area, from git only
 
 See [packages/cli](packages/cli) for every command.
 
+## Recipe: fix PHP2Shell in one command
+
+PHP2Shell (CVE-2026-109618, CVE-2026-109619) lets attackers run code on PHP web servers without logging in. Working exploits are public and exploitation attempts have been reported ([PHP advisory](https://www.php.net/archive/2026.php#2026-10-21-5)). Updating PHP is the only fix. In your project folder or on the server, run:
+
+```sh
+npx juxt-lang php2shell
+```
+
+It finds your AI agent (Claude Code, Codex, Gemini CLI or Cursor), sets up Juxt and starts the fix. The agent shows what it found and asks before changing anything.
+
+| Option | Use it to |
+|---|---|
+| `--agent codex` | Pick the agent: `claude`, `codex`, `gemini` or `cursor` |
+| `--print` | Print the Juxt program to paste into any AI chat |
+| `--no-launch` | Only write `juxt/php2shell.juxt` |
+
+In an AI chat instead? Type: `Run npx juxt-lang php2shell --print and follow it`
+
+What runs is [a Juxt program](https://github.com/juxt-lang/juxt/blob/main/examples/php2shell.juxt) with four agents in a pipeline, `scout -> planner -> approval -> patcher -> verifier`: read-only until you approve, then patch, restart and prove. Fixed versions and details: [juxt-lang.github.io/#/php2shell](https://juxt-lang.github.io/#/php2shell).
+
+**Tested on a real project.** We ran it on a clone of the public [Snipe-IT](https://github.com/snipe/snipe-it) repository. The agent found three PHP images (Ubuntu 24.04 with `libapache2-mod-php8.3` from apt, Alpine 3.24 with `php84-apache2`, and a floating `php:8.3-fpm-alpine3.21`), plus compose and CI. After approval it made three small edits: `apt-get upgrade` in the Ubuntu build, `apk add --upgrade` in the Alpine build, and `PHP_VERSION=8.3.36` for the FPM image. With no Docker in the sandbox, it marked every image **unverified** rather than claiming a fix. The test also improved the program: version 0.4.3 inspects PHP installed from distro packages and every build file, and prints the receipt only when every check passes. Changes stayed in our sandbox; Juxt-lang is not affiliated with Snipe-IT.
+
 ## Commands
 
 | Command | What it does | Model use |
@@ -175,7 +187,9 @@ See [packages/cli](packages/cli) for every command.
 plugins/juxt/         Claude Code plugin: skills, reviewer subagent, scripts, evals
 agent-skills/juxt/    Portable Agent Skills version for Codex and others
 examples/             Example .juxt programs
-spec/LANGUAGE.md      Language summary (the full specification is The Juxt Book)
+spec/GRAMMAR.md       Normative grammar, with a conformance suite in spec/conformance/
+bench/                End-to-end benchmark: with vs without Juxt, hidden tests, real usage
+spec/LANGUAGE.md      Language summary
 packages/cli/          The juxt-lang npm CLI
 docs/                 Redirect to the website (source: juxt-lang/juxt-lang.github.io)
 assets/               Logo, banner and brand files
@@ -190,6 +204,7 @@ assets/               Logo, banner and brand files
 | ✅ 0.6 | Typed IR + JSON Schema, `validate`, drift `check` against the repo |
 | ✅ 0.6 | Tiered router (`ask`): recall → compiled → local model → frontier, with measured `receipts` and `eval` |
 | ✅ 0.6 | Local-model adapters (Ollama / OpenAI-compatible), predictor slot, GitHub Action |
+| ✅ 0.7 | Formal grammar + conformance suite, record types, open benchmark |
 | 🔜 | Richer type binding (OpenAPI/Pydantic round-trip), regenerate-on-change from the program |
 | 🧭 | Enterprise blocks: triggers, fleets and rollouts, architecture fitness checks |
 

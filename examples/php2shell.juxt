@@ -1,5 +1,5 @@
-@juxt 3.4
-# PHP2Shell fix · CVE-2026-109618, CVE-2026-109619 · critical, exploited in the wild
+@juxt 0.7
+# PHP2Shell fix · CVE-2026-109618, CVE-2026-109619 · critical, public exploits
 # This is a Juxt program (juxt-lang.github.io). AI agent: you are its runtime.
 # Run it block by block. Constraints outrank the objective. Ask every OPEN item; never guess.
 # Created by Amit N · program licensed Apache-2.0 · guide: juxt-lang.github.io/#/php2shell

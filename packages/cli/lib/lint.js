@@ -1,5 +1,5 @@
 'use strict';
-// juxt lint and juxt ir: a small parser for the Juxt 3.4 working subset (spec/LANGUAGE.md).
+// juxt lint and juxt ir: the reference parser for the Juxt grammar (spec/GRAMMAR.md).
 const KNOWN = new Set(['context', 'objective', 'constraints', 'contract', 'pattern', 'verify', 'returns', 'resolved',
   'agent', 'remote agent', 'tools', 'topology', 'harness', 'policy', 'limits', 'observe', 'eval',
   'on', 'recipe', 'stack', 'freshness', 'fleet', 'rollout', 'architecture', 'fitness', 'extends',
@@ -17,12 +17,16 @@ function parse(src) {
     if (!line.trim()) return;
     if (prog.version === null) {
       const m = line.match(/^@juxt\s+(\d+(?:\.\d+)*)\s*$/);
-      if (m) { prog.version = m[1]; return; }
+      if (m) {
+        prog.version = m[1];
+        if (/^3\./.test(m[1])) { prog.legacyVersion = m[1]; prog.version = '0.6'; diags.push({ line: n, level: 'warning', msg: `"@juxt ${m[1]}" is the pre-0.7 header; it is read as 0.6. Write "@juxt 0.7" (spec/GRAMMAR.md, section 5)` }); }
+        return;
+      }
       diags.push({ line: n, level: 'error', msg: 'program must start with "@juxt <version>"' });
       prog.version = '';
     }
     if (/^\S/.test(line)) {
-      const m = line.match(/^([a-z_][a-z_ ]*?)(?:\s+([^:]+?))?:\s*(.*)$/);
+      const m = line.match(/^([a-z_][a-z_ -]*?)(?:\s+([^:]+?))?:\s*(.*)$/);
       if (!m) { diags.push({ line: n, level: 'error', msg: `expected "block:" at column 1, got "${line.trim()}"` }); cur = null; return; }
       let name = m[1].trim(); let label = m[2] ? m[2].trim() : null;
       if (!KNOWN.has(name) && label && KNOWN.has(name + ' ' + label.split(/\s+/)[0])) {
@@ -31,7 +35,7 @@ function parse(src) {
       if (!KNOWN.has(name)) {
         const two = name.split(' ');
         if (KNOWN.has(two[0])) { label = [two.slice(1).join(' '), label].filter(Boolean).join(' ') || null; name = two[0]; }
-        else diags.push({ line: n, level: 'warning', msg: `unknown block "${name}" (not in the 3.4 subset)` });
+        else diags.push({ line: n, level: 'warning', msg: `unknown block "${name}" (not in spec/GRAMMAR.md; unknown blocks are allowed)` });
       }
       cur = { name, label, line: n, inline: m[3] || null, items: [] };
       prog.blocks.push(cur);

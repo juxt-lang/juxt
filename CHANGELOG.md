@@ -2,6 +2,19 @@
 
 All notable changes to this project are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses [Semantic Versioning](https://semver.org/).
 
+## [0.7.0] - 2026-10-25
+
+### Added
+- **Formal grammar** ([spec/GRAMMAR.md](spec/GRAMMAR.md)) matching the reference parser, and an 18-case **conformance suite** ([spec/conformance](spec/conformance/)) any implementation can run.
+- **Open benchmark** ([bench/](bench/)): Claude Code on four tasks with and without Juxt, scored by hidden acceptance tests, using the agent's reported tokens and cost. `bench/selftest.mjs` proves every task scores 0 on the base repo and 100% with the reference, and runs in CI.
+
+### Changed
+- **Language version follows the toolchain.** Programs start with `@juxt 0.7`. The old `@juxt 3.4` header is still accepted, read as 0.6, with a lint suggestion.
+- **Record types parse correctly**: `out: 429 { retry_after: duration }` becomes a typed entry with fields. Commas and colons inside `{}`, `()` and `[]` no longer split. The IR schema gains `fields`.
+- **Vendor blocks** such as `x-yourco-review:` are a warning, as documented, instead of an error.
+- **No more strawman numbers.** `juxt eval` is now a routing check and no longer reports a "% less than the whole repo" figure; `juxt context` and `juxt receipts` drop that comparison too. Savings claims come only from the benchmark.
+- PHP2Shell copy matches the official advisories (public exploits, exploitation attempts reported) and links them.
+
 ## [0.6.0] - 2026-10-25
 
 ### Added

@@ -1,0 +1,5 @@
+# expect: error expected "block:" at column 1
+@juxt 0.7
+Objective: capitalised keywords are not blocks
+verify:
+  test "t"

@@ -33,7 +33,7 @@ List each decision the request did not make and the code depends on. Good OPEN i
 Request: "add a cancel-order endpoint, refunds go back to the card"
 
 ```
-@juxt 3.4
+@juxt 0.7
 objective:   POST /orders/{id}/cancel cancels the order and refunds the original card
 constraints:
   MUST     idempotent writes (payments domain rule)

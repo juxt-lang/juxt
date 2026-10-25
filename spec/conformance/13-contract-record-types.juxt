@@ -1,0 +1,14 @@
+# expect: ok
+# ir: contract.in.0 = {"name":"req","type":"CancelRequest"}
+# ir: contract.in.1 = {"name":"user","type":"User"}
+# ir: contract.out.0.name = "429 when over limit"
+# ir: contract.out.0.fields = [{"name":"retry_after","type":"duration"},{"name":"code","type":null}]
+# ir: contract.on_error.0.name = "redis down -> fail open, alert on-call"
+@juxt 0.7
+objective: x
+contract:
+  in:       req: CancelRequest, user (User)
+  out:      429 { retry_after: duration, code } when over limit
+  on_error: redis down -> fail open, alert on-call
+verify:
+  test "t"

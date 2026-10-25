@@ -9,7 +9,7 @@ const { indexRepo, checkProgram } = require('../lib/check');
 const { compileContext } = require('../lib/context');
 const { heuristicScore, rankPlans } = require('../lib/predictor');
 
-const PROG = `@juxt 3.4
+const PROG = `@juxt 0.7
 objective: cancel an order and refund the card
 constraints:
   MUST idempotent writes

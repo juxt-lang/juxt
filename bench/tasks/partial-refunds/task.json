@@ -1,0 +1,6 @@
+{
+  "id": "partial-refunds",
+  "repo": "fixture/shop-api",
+  "prompt": "Add partial refunds: POST /orders/:id/refunds with { amount }.",
+  "rules": "docs/RULES.md"
+}

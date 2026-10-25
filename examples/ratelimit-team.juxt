@@ -1,4 +1,4 @@
-@juxt 3.4
+@juxt 0.7
 # Rate-limit the public API without ever throttling billing
 extends: org/payments-base.juxt
 

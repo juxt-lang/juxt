@@ -1,0 +1,6 @@
+# expect: error indented line outside a block
+@juxt 0.7
+  stray item
+objective: x
+verify:
+  test "t"

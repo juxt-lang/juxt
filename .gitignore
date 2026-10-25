@@ -2,3 +2,6 @@
 plugins/juxt/evals/results/
 node_modules/
 .DS_Store
+bench/results/*
+!bench/results/.gitkeep
+!bench/results/published/

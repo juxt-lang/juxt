@@ -30,30 +30,6 @@
 </p>
 <p align="center"><a href="https://juxt-lang.github.io/#/visuals"><b>▶ Watch the films</b></a> · a narrated guide and the hand-drawn launch film</p>
 
-## Security update: fix PHP2Shell in one command
-
-PHP2Shell (CVE-2026-109618, CVE-2026-109619) lets attackers run code on PHP web servers without logging in, and it is being exploited now. Updating PHP is the only fix. In your project folder or on the server, run:
-
-```sh
-npx juxt-lang php2shell
-```
-
-It finds your AI agent (Claude Code, Codex, Gemini CLI or Cursor), sets up Juxt and starts the fix. The agent shows what it found and asks before changing anything.
-
-| Option | Use it to |
-|---|---|
-| `--agent codex` | Pick the agent: `claude`, `codex`, `gemini` or `cursor` |
-| `--print` | Print the Juxt program to paste into any AI chat |
-| `--no-launch` | Only write `juxt/php2shell.juxt` |
-
-In an AI chat instead? Type: `Run npx juxt-lang php2shell --print and follow it`
-
-What runs is [a Juxt program](https://github.com/juxt-lang/juxt/blob/main/examples/php2shell.juxt) with four agents in a pipeline, `scout -> planner -> approval -> patcher -> verifier`: read-only until you approve, then patch, restart and prove. Fixed versions and details: [juxt-lang.github.io/#/php2shell](https://juxt-lang.github.io/#/php2shell).
-
-**Tested on a real project.** We ran it on a clone of the public [Snipe-IT](https://github.com/snipe/snipe-it) repository. The agent found three PHP images (Ubuntu 24.04 with `libapache2-mod-php8.3` from apt, Alpine 3.24 with `php84-apache2`, and a floating `php:8.3-fpm-alpine3.21`), plus compose and CI. After approval it made three small edits: `apt-get upgrade` in the Ubuntu build, `apk add --upgrade` in the Alpine build, and `PHP_VERSION=8.3.36` for the FPM image. With no Docker in the sandbox, it marked every image **unverified** rather than claiming a fix. The test also improved the program: version 0.4.3 inspects PHP installed from distro packages and every build file, and prints the receipt only when every check passes. Changes stayed in our sandbox; Juxt-lang is not affiliated with Snipe-IT.
-
-**Patching many servers, or no in-house team?** The creator of Juxt can help: [email Amit](mailto:amit.nilajkar@gmail.com?subject=PHP2Shell%3A%20help%20patching%20our%20servers) or see the [contact page](https://juxt-lang.github.io/#/contact). If this helped, [star the repo](https://github.com/juxt-lang/juxt).
-
 ## Quick start
 
 
@@ -84,6 +60,28 @@ Understood as
 2. **Ask.** Anything the request did not decide becomes an `OPEN` question, asked before building, never guessed.
 3. **Build and verify.** The agent uses the skills and tools your repo already has, then proves each check.
 4. **Keep.** The program is saved as a plain-text `juxt/*.juxt` file, versioned and reviewable like code.
+
+## Recipe: fix PHP2Shell in one command
+
+PHP2Shell (CVE-2026-109618, CVE-2026-109619) lets attackers run code on PHP web servers without logging in. Working exploits are public and exploitation attempts have been reported ([PHP advisory](https://www.php.net/archive/2026.php#2026-10-21-5)). Updating PHP is the only fix. In your project folder or on the server, run:
+
+```sh
+npx juxt-lang php2shell
+```
+
+It finds your AI agent (Claude Code, Codex, Gemini CLI or Cursor), sets up Juxt and starts the fix. The agent shows what it found and asks before changing anything.
+
+| Option | Use it to |
+|---|---|
+| `--agent codex` | Pick the agent: `claude`, `codex`, `gemini` or `cursor` |
+| `--print` | Print the Juxt program to paste into any AI chat |
+| `--no-launch` | Only write `juxt/php2shell.juxt` |
+
+In an AI chat instead? Type: `Run npx juxt-lang php2shell --print and follow it`
+
+What runs is [a Juxt program](https://github.com/juxt-lang/juxt/blob/main/examples/php2shell.juxt) with four agents in a pipeline, `scout -> planner -> approval -> patcher -> verifier`: read-only until you approve, then patch, restart and prove. Fixed versions and details: [juxt-lang.github.io/#/php2shell](https://juxt-lang.github.io/#/php2shell).
+
+**Tested on a real project.** We ran it on a clone of the public [Snipe-IT](https://github.com/snipe/snipe-it) repository. The agent found three PHP images (Ubuntu 24.04 with `libapache2-mod-php8.3` from apt, Alpine 3.24 with `php84-apache2`, and a floating `php:8.3-fpm-alpine3.21`), plus compose and CI. After approval it made three small edits: `apt-get upgrade` in the Ubuntu build, `apk add --upgrade` in the Alpine build, and `PHP_VERSION=8.3.36` for the FPM image. With no Docker in the sandbox, it marked every image **unverified** rather than claiming a fix. The test also improved the program: version 0.4.3 inspects PHP installed from distro packages and every build file, and prints the receipt only when every check passes. Changes stayed in our sandbox; Juxt-lang is not affiliated with Snipe-IT.
 
 ## Commands
 
@@ -122,10 +120,12 @@ Not every question needs a frontier model with the whole repo attached. `juxt as
 
 ```sh
 npx juxt-lang ask "what are the MUST rules?"        # tier 1: answered from the IR, 0 tokens
-npx juxt-lang context "build the endpoint"          # shows ~98% less context than the whole repo
-npx juxt-lang eval                                  # measures it on your repo
+npx juxt-lang context "build the endpoint"          # the briefing Juxt sends: program + touched types
+npx juxt-lang eval                                  # routing check: which questions need no model
 npx juxt-lang receipts                              # tiers, cache-hit rate, tokens saved
 ```
+
+Whether this saves tokens on **real coding tasks** is measured separately, by an end-to-end benchmark with the agent's own reported usage: [bench/](https://github.com/juxt-lang/juxt/tree/main/bench). No results are claimed until it has been run.
 
 Point it at a local open model (zero marginal cost) for the small stuff, and escalate only the hard parts:
 

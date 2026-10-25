@@ -1,0 +1,6 @@
+# expect: error a program has one objective
+@juxt 0.7
+objective: a
+objective: b
+verify:
+  test "t"

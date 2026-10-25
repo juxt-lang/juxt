@@ -1,4 +1,4 @@
-@juxt 3.4
+@juxt 0.7
 # Agent -> agent -> agent: a quote that crosses three organisations
 objective: answer a customer's enterprise pricing question with a signed quote
 
