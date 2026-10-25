@@ -1,7 +1,7 @@
 {
   "name": "juxt-lang",
-  "version": "0.5.0",
-  "description": "Juxt-lang CLI: add Juxt mode to any coding agent, run ready-made fix programs (npx juxt-lang fix php2shell), lint .juxt programs and get git-computed repo digests.",
+  "version": "0.6.0",
+  "description": "Juxt-lang CLI: typed IR + JSON Schema for .juxt programs, drift check against your repo, a token-saving tiered router (cache -> compiled -> local model -> frontier) with measured receipts, plus Juxt mode for any coding agent and the php2shell fix.",
   "keywords": [
     "agent-skills",
     "ai-agents",
@@ -13,11 +13,15 @@
     "cve-2026-109619",
     "juxt",
     "juxt-lang",
+    "json-schema",
     "llm",
+    "local-llm",
+    "ollama",
     "php",
     "php2shell",
     "security",
-    "spec-driven-development"
+    "spec-driven-development",
+    "token-optimization"
   ],
   "homepage": "https://juxt-lang.github.io/",
   "repository": {
@@ -43,6 +47,7 @@
   "files": [
     "bin",
     "lib",
+    "schema",
     "skill",
     "recipes",
     "README.md",
@@ -73,6 +78,14 @@
   "main": "lib/lint.js",
   "exports": {
     ".": "./lib/lint.js",
+    "./ir": "./lib/ir.js",
+    "./validate": "./lib/validate.js",
+    "./check": "./lib/check.js",
+    "./router": "./lib/router.js",
+    "./context": "./lib/context.js",
+    "./model": "./lib/model.js",
+    "./predictor": "./lib/predictor.js",
+    "./schema": "./schema/juxt-ir.schema.json",
     "./package.json": "./package.json"
   }
 }

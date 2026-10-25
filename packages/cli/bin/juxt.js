@@ -3,7 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
-const { lint, toIR } = require('../lib/lint');
+const { lint, toIR, toTypedIR } = require('../lib/lint');
 const pkg = require('../package.json');
 
 const SKILL = path.join(__dirname, '..', 'skill');
@@ -28,10 +28,24 @@ Usage
       options: --agent claude|codex|gemini|cursor  --print  --no-launch
   npx juxt-lang fix <recipe>         Write a ready-made fix program, e.g. fix php2shell
   npx juxt-lang lint [files...]      Check .juxt programs (default: juxt/**/*.juxt)
-  npx juxt-lang ir <file>            Print a program's intermediate representation as JSON
+  npx juxt-lang validate [files...]  Validate the typed IR against the JSON Schema
+  npx juxt-lang check [files...]     Drift: verify tests, contract types and paths vs the repo (CI-friendly)
+  npx juxt-lang ir <file> [--typed]  Print a program's intermediate representation as JSON
+  npx juxt-lang schema [--path]      Print the typed-IR JSON Schema
+
+  npx juxt-lang ask "<q>" [--file f] Answer from the program: cache -> compiled -> local model -> frontier
+      options: --no-model  --url <endpoint>  --model <name>  --show
+  npx juxt-lang context "<q>" [-f f] Show the compiled context and how much less it is than the whole repo
+  npx juxt-lang receipts             Measured token receipts: tiers, cache rate, savings
+  npx juxt-lang eval [--with-model]  Measure no-model answer rate and context reduction on this repo
+  npx juxt-lang models               Check the configured local model endpoint (JUXT_MODEL_URL/JUXT_MODEL)
+
   npx juxt-lang digest [1d]          What changed in the repo, grouped by area (git only, no model)
   npx juxt-lang facts [7d]           Numbered, citable facts for status updates (git only)
   npx juxt-lang hosts                Skills, commands, subagents and MCP servers this repo already has
+
+Local model (optional): set JUXT_MODEL_URL (default http://localhost:11434, Ollama)
+and JUXT_MODEL (default qwen2.5-coder:7b). OpenAI-compatible endpoints work too.
 
 Then tell your agent: "use juxt: <your request>"
 Claude Code users can install the plugin instead:
@@ -204,6 +218,149 @@ function lintCmd(files) {
   return errors ? 1 : 0;
 }
 
+function readFiles(files) {
+  if (!files.length) files = walk(path.join(gitRoot(), 'juxt'));
+  return files;
+}
+
+function validateCmd(args) {
+  const SCHEMA = path.join(__dirname, '..', 'schema', 'juxt-ir.schema.json');
+  const { validate } = require('../lib/validate');
+  const schema = JSON.parse(fs.readFileSync(SCHEMA, 'utf8'));
+  const files = readFiles(args.filter(a => !a.startsWith('--')));
+  if (!files.length) { console.log('juxt: no .juxt files found (looked in juxt/).'); return 0; }
+  let bad = 0;
+  for (const f of files) {
+    const rel = path.relative(process.cwd(), f) || f;
+    let ir; try { ir = toTypedIR(lint(fs.readFileSync(f, 'utf8')).prog); } catch (e) { console.log(`${rel}: parse error ${e.message}`); bad++; continue; }
+    const errs = validate(ir, schema);
+    if (args.includes('--json')) { console.log(JSON.stringify({ file: rel, valid: !errs.length, errors: errs }, null, 2)); if (errs.length) bad++; continue; }
+    if (!errs.length) console.log(`${c('32', 'valid')} ${rel}`);
+    else { bad++; console.log(`${c('31', 'invalid')} ${rel}`); for (const e of errs) console.log(`  ${e}`); }
+  }
+  return bad ? 1 : 0;
+}
+
+function checkCmd(args) {
+  const { indexRepo, checkProgram } = require('../lib/check');
+  const root = gitRoot();
+  const files = readFiles(args.filter(a => !a.startsWith('--')));
+  if (!files.length) { console.log('juxt: no .juxt files found (looked in juxt/). Run "npx juxt-lang init" first.'); return 0; }
+  const idx = indexRepo(root);
+  let drift = 0, warn = 0;
+  const json = args.includes('--json');
+  const report = [];
+  for (const f of files) {
+    const rel = path.relative(root, f) || f;
+    const findings = checkProgram(fs.readFileSync(f, 'utf8'), root, idx, rel);
+    report.push({ file: rel, findings });
+    if (json) continue;
+    const d = findings.filter(x => x.sev === 'drift'), w = findings.filter(x => x.sev === 'warn');
+    drift += d.length; warn += w.length;
+    if (!findings.length) { console.log(`${c('32', 'ok')}    ${rel}  (in sync with the repo)`); continue; }
+    console.log(`${d.length ? c('31', 'drift') : c('33', 'warn ')} ${rel}`);
+    for (const x of findings) console.log(`  ${x.sev === 'drift' ? c('31', '✗') : c('33', '!')} ${x.msg}${x.line ? c('90', '  (line ' + x.line + ')') : ''}`);
+  }
+  if (json) { console.log(JSON.stringify({ indexed: { files: idx.fileCount, types: idx.types.size, testFiles: idx.testFileCount }, report }, null, 2)); return report.some(r => r.findings.some(f => f.sev === 'drift')) ? 1 : 0; }
+  console.log(`\nindexed ${idx.fileCount} files · ${idx.types.size} types · ${idx.testFileCount} test files`);
+  console.log(`${files.length} program(s), ${c(drift ? '31' : '32', drift + ' drift')}, ${warn} warning(s)`);
+  return drift ? 1 : 0;
+}
+
+function schemaCmd(args) {
+  const SCHEMA = path.join(__dirname, '..', 'schema', 'juxt-ir.schema.json');
+  if (args.includes('--path')) { console.log(SCHEMA); return 0; }
+  process.stdout.write(fs.readFileSync(SCHEMA, 'utf8'));
+  return 0;
+}
+
+function modelOpts(args) {
+  const opt = k => { const i = args.indexOf(k); return i >= 0 ? args[i + 1] : null; };
+  const o = {};
+  if (opt('--url')) o.url = opt('--url');
+  if (opt('--model')) o.model = opt('--model');
+  return o;
+}
+
+async function modelsCmd(args) {
+  const { health } = require('../lib/model');
+  const h = await health(modelOpts(args));
+  if (h.ok) console.log(`${c('32', 'ok')}    ${h.url}  model ${c('1', h.model)}  (reachable)`);
+  else console.log(`${c('31', 'down')}  ${h.url}  model ${h.model}\n      ${h.error || 'status ' + h.status}\n      Start a local model, e.g.:  ollama run ${h.model}\n      or point elsewhere:  JUXT_MODEL_URL=http://host:port JUXT_MODEL=<name>`);
+  return h.ok ? 0 : 1;
+}
+
+async function askCmd(args) {
+  const { route } = require('../lib/router');
+  const { indexRepo } = require('../lib/check');
+  const opt = k => { const i = args.indexOf(k); return i >= 0 ? args[i + 1] : null; };
+  const file = opt('--file') || opt('-f');
+  const q = args.filter((a, i) => !a.startsWith('--') && !(i > 0 && ['--file', '-f', '--url', '--model'].includes(args[i - 1]))).join(' ').trim();
+  if (!q) { console.error('usage: juxt ask "a question" [--file juxt/x.juxt] [--no-model] [--url U] [--model M]'); return 2; }
+  const root = gitRoot();
+  let progFile = file;
+  if (!progFile) { const fs2 = walk(path.join(root, 'juxt')); progFile = fs2[0]; }
+  if (!progFile || !fs.existsSync(progFile)) { console.error('juxt: no program found. Pass --file juxt/<name>.juxt'); return 2; }
+  const program = fs.readFileSync(progFile, 'utf8');
+  const idx = indexRepo(root);
+  const o = { root, repoIndex: idx, model: modelOpts(args) };
+  if (args.includes('--no-model')) o.model = false;
+  const r = await route(program, q, o);
+  const TN = { 0: 'recall · cache', 1: 'compiled · no model', 2: 'small local model', 3: 'frontier' };
+  if (r.escalate) {
+    console.log(`${c('33', 'escalate')} no local model answered (tier 3).${r.error ? '  ' + r.error : ''}`);
+    console.log(`\nCompiled context ready (${r.compiledTokens} tok vs ~${r.baselineTokens || '?'} for the whole repo).`);
+    console.log(`Start a local model (ollama run <model>) or paste the compiled prompt into a frontier model. Use --show to print it.`);
+    if (args.includes('--show')) console.log('\n--- compiled prompt ---\n' + r.prompt);
+    return 3;
+  }
+  console.log(c('90', `[tier ${r.tier} · ${TN[r.tier]}${r.cached ? ' · cached' : ''}${r.model ? ' · ' + r.model : ''}${r.tokensIn ? ' · ' + r.tokensIn + '+' + r.tokensOut + ' tok' : ' · 0 tok'}]`));
+  console.log(r.answer);
+  return 0;
+}
+
+function contextCmd(args) {
+  const { compileContext } = require('../lib/context');
+  const { indexRepo } = require('../lib/check');
+  const opt = k => { const i = args.indexOf(k); return i >= 0 ? args[i + 1] : null; };
+  const file = opt('--file') || opt('-f');
+  const q = args.filter((a, i) => !a.startsWith('--') && !(i > 0 && ['--file', '-f'].includes(args[i - 1]))).join(' ').trim() || 'build this';
+  const root = gitRoot();
+  const progFile = file || walk(path.join(root, 'juxt'))[0];
+  if (!progFile || !fs.existsSync(progFile)) { console.error('juxt: no program found. Pass --file juxt/<name>.juxt'); return 2; }
+  const program = fs.readFileSync(progFile, 'utf8');
+  const idx = indexRepo(root);
+  const ctx = compileContext(program, toTypedIR(lint(program).prog), q, idx);
+  if (args.includes('--prompt')) { process.stdout.write(ctx.prompt); return 0; }
+  const base = ctx.baselineTokensEst;
+  console.log(`compiled context:  ${c('1', ctx.tokensEst + ' tokens')} (est)`);
+  if (base) {
+    const saved = base - ctx.tokensEst, pct = base ? Math.round(saved / base * 100) : 0;
+    console.log(`whole repo (naive): ~${base} tokens (est, ${idx.fileCount} files)`);
+    console.log(`${c('32', 'saved')} ~${saved} tokens / request — ${c('1', pct + '%')} less context`);
+  }
+  console.log(`types included:     ${ctx.typesIncluded.join(', ') || '(none needed)'}`);
+  console.log(`\nSee the prompt with --prompt. Token counts are chars/4 estimates.`);
+  return 0;
+}
+
+function receiptsCmd(args) {
+  const receipts = require('../lib/receipts');
+  const root = gitRoot();
+  const s = receipts.summarise(root);
+  if (args.includes('--json')) { console.log(JSON.stringify(s, null, 2)); return 0; }
+  if (!s.requests) { console.log('No routed requests yet. Try:  juxt ask "what are the rules?" --file juxt/<name>.juxt'); return 0; }
+  console.log(`${c('1', 'Juxt receipts')}  ·  ${s.requests} request(s)`);
+  for (const t of [0, 1, 2, 3]) if (s.byTier[t]) console.log(`  tier ${t} ${receipts.TIER_NAME[t].padEnd(20)} ${s.byTier[t]}`);
+  console.log(`\n  model calls:     ${s.modelCalls}`);
+  console.log(`  cache hit rate:  ${Math.round(s.cacheHitRate * 100)}%`);
+  console.log(`  model tokens:    ${s.tokensIn} in · ${s.tokensOut} out${s.est ? ' (some est)' : ''}`);
+  if (s.tokensSavedByTiers) console.log(`  ${c('32', 'saved')} ${s.tokensSavedByTiers} model tokens via cache + deterministic answers`);
+  if (s.contextSaved) console.log(`  ${c('32', 'saved')} ~${s.contextSaved} tokens by compiling context instead of whole-repo`);
+  console.log(`\n  receipts: ${path.relative(process.cwd(), receipts.file(root))}`);
+  return 0;
+}
+
 function main(argv) {
   const [cmd, ...rest] = argv;
   switch (cmd) {
@@ -213,11 +370,20 @@ function main(argv) {
     case 'lint': return lintCmd(rest);
     case 'ir': case 'render': {
       const f = rest.find(a => !a.startsWith('--'));
-      if (!f) { console.error('usage: juxt ir <file.juxt>'); return 2; }
+      if (!f) { console.error('usage: juxt ir <file.juxt> [--typed]'); return 2; }
       const { prog, diags } = lint(fs.readFileSync(f, 'utf8'));
-      console.log(JSON.stringify({ ...toIR(prog), diagnostics: diags }, null, 2));
+      const body = rest.includes('--typed') ? toTypedIR(prog) : toIR(prog);
+      console.log(JSON.stringify({ ...body, diagnostics: diags }, null, 2));
       return diags.some(d => d.level === 'error') ? 1 : 0;
     }
+    case 'validate': return validateCmd(rest);
+    case 'check': return checkCmd(rest);
+    case 'schema': return schemaCmd(rest);
+    case 'ask': case 'route': return askCmd(rest);
+    case 'context': return contextCmd(rest);
+    case 'receipts': return receiptsCmd(rest);
+    case 'models': case 'model': return modelsCmd(rest);
+    case 'eval': return require('../lib/eval').evalCmd(rest, { gitRoot, walk, c });
     case 'fix': case 'recipe': return fixCmd(rest);
     case 'php2shell': return quickFix('php2shell', rest);
     case 'digest': return runScript('digest.sh', rest);
@@ -226,4 +392,4 @@ function main(argv) {
     default: console.error(`juxt: unknown command "${cmd}"\n`); help(); return 2;
   }
 }
-process.exitCode = main(process.argv.slice(2));
+Promise.resolve(main(process.argv.slice(2))).then(code => { process.exitCode = code; });

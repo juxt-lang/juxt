@@ -1,0 +1,41 @@
+name: "Juxt check"
+description: "Lint .juxt programs, validate their typed IR, and check for drift against the repo. Fails the build on errors or drift."
+author: "Amit N (Amit Nilajkar)"
+branding:
+  icon: "check-circle"
+  color: "yellow"
+inputs:
+  version:
+    description: "juxt-lang version (npm dist-tag or exact version)"
+    required: false
+    default: "latest"
+  files:
+    description: "Glob/paths of .juxt programs (default: juxt/**/*.juxt)"
+    required: false
+    default: ""
+  check:
+    description: "Run drift check against the repo (true/false)"
+    required: false
+    default: "true"
+  fail-on-drift:
+    description: "Fail the job when drift is found (true/false)"
+    required: false
+    default: "true"
+runs:
+  using: "composite"
+  steps:
+    - name: Lint and validate Juxt programs
+      shell: bash
+      run: |
+        set -e
+        npx -y juxt-lang@${{ inputs.version }} lint ${{ inputs.files }}
+        npx -y juxt-lang@${{ inputs.version }} validate ${{ inputs.files }}
+    - name: Check for drift against the repo
+      if: ${{ inputs.check == 'true' }}
+      shell: bash
+      run: |
+        if [ "${{ inputs.fail-on-drift }}" = "true" ]; then
+          npx -y juxt-lang@${{ inputs.version }} check ${{ inputs.files }}
+        else
+          npx -y juxt-lang@${{ inputs.version }} check ${{ inputs.files }} || true
+        fi

@@ -84,4 +84,6 @@ function toIR(prog) {
   }
   return ir;
 }
-module.exports = { lint, toIR, parse };
+let _typed;
+function toTypedIR(prog) { return (_typed || (_typed = require('./ir').toTypedIR))(prog); }
+module.exports = { lint, toIR, toTypedIR, parse };

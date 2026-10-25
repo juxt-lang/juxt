@@ -2,6 +2,20 @@
 
 All notable changes to this project are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses [Semantic Versioning](https://semver.org/).
 
+## [0.6.0] - 2026-10-25
+
+### Added
+- **Typed IR + JSON Schema.** `juxt ir --typed` emits a strict, machine-checkable IR (typed contract, agents, typed handoffs, topology, limits). `schema/juxt-ir.schema.json` describes it; `juxt validate` checks programs against it with a dependency-free validator. New `juxt schema` prints the schema.
+- **Drift check.** `juxt check` binds a program to the repo it governs: flags unresolved `OPEN` questions as drift, `verify` tests with no matching test, PascalCase contract/handoff types that don't resolve to a TS/Pydantic/OpenAPI definition, and referenced paths that don't exist. CI-friendly exit codes; `--json` output.
+- **Tiered router with measured receipts.** `juxt ask` answers from the cheapest tier that can: T0 recall (cache), T1 compiled (deterministic answers from the IR, no model), T2 a small local model, T3 escalate. `juxt receipts` summarises tiers, cache-hit rate and tokens saved. `juxt context` shows the compiled context and how much smaller it is than attaching the whole repo. `juxt eval` measures the no-model answer rate and context reduction on your repo.
+- **Local-model adapters.** OpenAI-compatible endpoints (Ollama `/v1`, vLLM, LM Studio, llama.cpp, Together, OpenAI) and Ollama native, via `JUXT_MODEL_URL` / `JUXT_MODEL` / `JUXT_API_KEY`. `juxt models` checks the endpoint.
+- **Predictor slot.** `lib/predictor.js` ranks candidate plans by MUST/verify coverage before building, via `JUXT_PREDICTOR_URL` or a deterministic heuristic — the seam a JEPA-style code world-model would plug into.
+- **GitHub Action.** `juxt-lang/juxt@v1` (composite `action.yml`) runs lint + validate + check in CI.
+- JS API subpath exports: `juxt-lang/ir`, `/validate`, `/check`, `/router`, `/context`, `/model`, `/predictor`, `/schema`.
+
+### Notes
+- Token counts are `chars/4` estimates unless a model reports real counts; the CLI labels them as estimates.
+
 ## [0.5.0] - 2026-10-25
 
 ### Added

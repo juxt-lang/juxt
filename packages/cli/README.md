@@ -93,12 +93,61 @@ Understood as
 | `juxt php2shell` | Fix PHP2Shell: sets up and starts your AI agent (`--agent`, `--print`, `--no-launch`) | Node |
 | `juxt fix <recipe>` | Write a ready-made fix program into `juxt/`, e.g. `juxt fix php2shell` | Node |
 | `juxt lint [files...]` | Check `.juxt` programs: header, blocks, constraints, verify checks, unresolved `OPEN` questions | Node |
-| `juxt ir <file>` | Print a program's intermediate representation as JSON, for tooling | Node |
+| `juxt validate [files...]` | Validate the typed IR against the JSON Schema | Node |
+| `juxt check [files...]` | Drift vs the repo: missing tests, unresolved types, dead paths | Node |
+| `juxt ir <file> [--typed]` | Print a program's intermediate representation as JSON | Node |
+| `juxt ask "<q>" [--file f]` | Answer from the program: cache → compiled → local model → frontier | Node |
+| `juxt context "<q>"` | Show the compiled context and how much less it is than the whole repo | Node |
+| `juxt receipts` · `juxt eval` | Measured token receipts; no-model answer rate and context reduction | Node |
 | `juxt digest [1d]` | What changed in the repo, by area, with risks flagged | bash, git |
 | `juxt facts [7d]` | Numbered, citable facts for status updates | bash, git |
 | `juxt hosts` | The skills, commands, subagents and MCP servers the repo already has | bash |
 
 `--host` takes `agents` (default), `claude`, `cursor`, `gemini`, a comma-separated list, or `all`.
+
+## Keep AI-written code under control
+
+Agents now write code faster than anyone can review it, so the intent — not the code — is the thing to keep. Juxt makes the program the source of truth and checks the code against it.
+
+- **Typed IR + schema.** `juxt ir <file> --typed` emits a strict IR (typed contract, agents, typed handoffs, limits). `juxt validate` checks it against [`schema/juxt-ir.schema.json`](schema/juxt-ir.schema.json). Agents can pass typed data to each other instead of prose.
+- **Drift check.** `juxt check` fails CI when a program and the repo disagree: an unresolved `OPEN` question, a `verify` test with no matching test, a contract type with no `interface`/`class`/schema, or a referenced path that doesn't exist.
+
+```sh
+npx juxt-lang check          # exits non-zero on drift — drop it in CI
+```
+
+## Fewer tokens per answer
+
+Not every question needs a frontier model with the whole repo attached. `juxt ask` routes to the cheapest tier that can answer, and sends only the part of the repo a question touches:
+
+```sh
+npx juxt-lang ask "what are the MUST rules?"        # tier 1: answered from the IR, 0 tokens
+npx juxt-lang context "build the endpoint"          # shows ~98% less context than the whole repo
+npx juxt-lang eval                                  # measures it on your repo
+npx juxt-lang receipts                              # tiers, cache-hit rate, tokens saved
+```
+
+Point it at a local open model (zero marginal cost) for the small stuff, and escalate only the hard parts:
+
+```sh
+ollama run qwen2.5-coder:7b
+JUXT_MODEL_URL=http://localhost:11434 JUXT_MODEL=qwen2.5-coder:7b npx juxt-lang ask "how do I make this write idempotent?"
+```
+
+OpenAI-compatible endpoints (vLLM, LM Studio, llama.cpp, Together, OpenAI) work too via `JUXT_MODEL_URL` / `JUXT_API_KEY`. Token counts are `chars/4` estimates unless the model reports real ones. A predictor endpoint (`JUXT_PREDICTOR_URL`) can rank candidate plans before building — the slot a JEPA-style code model plugs into.
+
+### In CI with the Action
+
+```yaml
+# .github/workflows/juxt.yml
+on: [pull_request]
+jobs:
+  juxt:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: juxt-lang/juxt@v1   # lint + validate + drift check
+```
 
 | Host | Skill folder |
 |---|---|

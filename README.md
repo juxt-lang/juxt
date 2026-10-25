@@ -187,8 +187,10 @@ assets/               Logo, banner and brand files
 |---|---|
 | ✅ 0.1 | Juxt mode, digest, cited status, host discovery, init, receipts, reviewer subagent, evals |
 | ✅ 0.1 | `juxt-lang` CLI on npm: `init`, `lint`, `ir`, `digest`, `facts`, `hosts` |
-| 🔜 | Gateway for answer tiers (recall → compiled → small model → frontier) |
-| 🧭 | Team blocks: typed handoffs, `remote agent` over A2A, `tools` over MCP |
+| ✅ 0.6 | Typed IR + JSON Schema, `validate`, drift `check` against the repo |
+| ✅ 0.6 | Tiered router (`ask`): recall → compiled → local model → frontier, with measured `receipts` and `eval` |
+| ✅ 0.6 | Local-model adapters (Ollama / OpenAI-compatible), predictor slot, GitHub Action |
+| 🔜 | Richer type binding (OpenAPI/Pydantic round-trip), regenerate-on-change from the program |
 | 🧭 | Enterprise blocks: triggers, fleets and rollouts, architecture fitness checks |
 
 Ideas and RFCs are welcome in [Discussions](https://github.com/juxt-lang/juxt/discussions).

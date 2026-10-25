@@ -25,8 +25,10 @@ jobs:
           bash plugins/juxt/scripts/digest.sh 30d
           bash plugins/juxt/scripts/facts.sh 30d
           bash plugins/juxt/scripts/hosts.sh --brief
-      - name: CLI tests and example lint
+      - name: CLI tests, example lint, validate and eval
         working-directory: packages/cli
         run: |
           npm test
           node bin/juxt.js lint ../../examples/*.juxt
+          node bin/juxt.js validate ../../examples/*.juxt
+          node bin/juxt.js eval --file ../../examples/ratelimit-team.juxt --json > /dev/null
