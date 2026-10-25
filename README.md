@@ -24,9 +24,9 @@
 ---
 
 <p align="center">
-  <a href="https://juxt-lang.github.io/#/home/launch"><img src="assets/juxt-highlight.gif" alt="Launch film: six agents in tangled harnesses, then one 'use juxt' brings them into order." width="100%"></a>
+  <a href="https://juxt-lang.github.io/#/visuals"><img src="assets/juxt-highlight.gif" alt="Launch film: six agents in tangled harnesses, then one 'use juxt' brings them into order." width="100%"></a>
 </p>
-<p align="center"><a href="https://juxt-lang.github.io/#/home/launch"><b>▶ Watch the 48-second launch film</b></a> · hand-drawn, with a score made in code</p>
+<p align="center"><a href="https://juxt-lang.github.io/#/visuals"><b>▶ Watch the films</b></a> · a narrated guide and the hand-drawn launch film, both animated in code</p>
 
 **Juxt-lang is a language for directing AI agents.** You put many models side by side, give them one intent, and get the full strength of each, without the guessing.
 
